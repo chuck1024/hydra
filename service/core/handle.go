@@ -26,7 +26,7 @@ func HandleData(message []byte, client *common.Client) {
 			godog.Error("[HandleData] response json Marshal occur error: %s", err)
 		}
 
-		godog.Debug("[HandleData] deal conn. response: %s", *response)
+		godog.Debug("[HandleData] deal conn. response: %v", *response)
 
 		client.Socket.WriteMessage(websocket.TextMessage, respByte)
 	}()

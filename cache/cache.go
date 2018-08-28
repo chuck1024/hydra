@@ -8,6 +8,7 @@ package cache
 import (
 	"errors"
 	"fmt"
+	redisCluster "github.com/chasex/redis-go-cluster"
 	"github.com/chuck1024/godog"
 	"github.com/chuck1024/godog/store/cache"
 	"github.com/chuck1024/godog/utils"
@@ -54,7 +55,7 @@ func GetUuid(uuid uint64) (value string, err error) {
 
 	value, err = cache.Get(key)
 	if err != nil {
-		if err == cache.ErrNil {
+		if err == redisCluster.ErrNil {
 			godog.Debug("[GetUuid] get value keyNotExist. key: %s", key)
 			return "", KeyNotExist
 		}
@@ -108,7 +109,8 @@ func GetPush(id string) bool {
 
 	value, err := cache.Get(key)
 	if err != nil {
-		if err == cache.ErrNil {
+		newErr := fmt.Sprintf("%s", err)
+		if newErr == "nil reply" {
 			godog.Debug("[GetPush] redis check no repeat key: %s ", key)
 			return false
 		}

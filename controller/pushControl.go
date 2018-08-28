@@ -27,7 +27,7 @@ func PushControl(rsp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	dErr := &de.CodeError{}
+	var dErr *de.CodeError
 	request := &common.PushReq{}
 	response := &common.PushRsp{}
 
@@ -35,7 +35,7 @@ func PushControl(rsp http.ResponseWriter, req *http.Request) {
 		if dErr != nil {
 			godog.Error("[PushControl], errorCode: %d, errMsg: %s", dErr.Code(), dErr.Detail())
 		}
-		rsp.Write(httplib.LogGetResponseInfo(req, dErr, rsp))
+		rsp.Write(httplib.LogGetResponseInfo(req, dErr, response))
 	}()
 
 	err := httplib.GetRequestBody(req, &request)

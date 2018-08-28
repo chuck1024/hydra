@@ -26,7 +26,7 @@ func QueryControl(rsp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	dErr := &de.CodeError{}
+	var dErr *de.CodeError
 	request := &common.QueryReq{}
 	response := &common.QueryRsp{}
 
@@ -34,16 +34,16 @@ func QueryControl(rsp http.ResponseWriter, req *http.Request) {
 		if dErr != nil {
 			godog.Error("[QueryControl], errorCode: %d, errMsg: %s", dErr.Code(), dErr.Detail())
 		}
-		rsp.Write(httplib.LogGetResponseInfo(req, dErr, rsp))
+		rsp.Write(httplib.LogGetResponseInfo(req, dErr, response))
 	}()
 
-	err := httplib.GetRequestBody(req, &request)
+	err := httplib.GetRequestBody(req, request)
 	if err != nil {
 		dErr = de.MakeCodeError(de.ParameterError, err)
 		return
 	}
 
-	godog.Info("[QueryControl] received request: %#v", request)
+	godog.Info("[QueryControl] received request: %v", *request)
 
 	_, err = cache.GetUuid(request.Uuid)
 	if err != nil {

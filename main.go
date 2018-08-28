@@ -7,6 +7,7 @@ package main
 
 import (
 	"github.com/chuck1024/godog"
+	"github.com/chuck1024/godog/store/cache"
 	"hydra/controller"
 	"hydra/service/core"
 )
@@ -19,6 +20,9 @@ func register() {
 }
 
 func main() {
+	url, _ := godog.AppConfig.String("redis")
+	cache.Init(url)
+
 	register()
 
 	go core.Start()

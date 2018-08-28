@@ -26,7 +26,7 @@ func RouteControl(rsp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	dErr := &de.CodeError{}
+	var dErr *de.CodeError
 	request := &common.RouteReq{}
 	response := &common.RouteRsp{}
 
@@ -34,7 +34,7 @@ func RouteControl(rsp http.ResponseWriter, req *http.Request) {
 		if dErr != nil {
 			godog.Error("[RouteControl], errorCode: %d, errMsg: %s", dErr.Code(), dErr.Detail())
 		}
-		rsp.Write(httplib.LogGetResponseInfo(req, dErr, rsp))
+		rsp.Write(httplib.LogGetResponseInfo(req, dErr, response))
 	}()
 
 	err := httplib.GetRequestBody(req, &request)
