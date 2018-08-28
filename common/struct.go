@@ -10,38 +10,71 @@ import (
 	"sync"
 )
 
-// 推送消息
+////////// to client /////////////
+// login
+type LoginReq struct {
+	Id   string `json:"id"`
+	Cmd  string `json:"cmd"` // login
+	Uuid uint64 `json:"uuid"`
+}
+
+// heartbeat
+type HeartBeatReq struct {
+	Id  string `json:"id"`
+	Cmd string `json:"cmd"` // heartbeat
+}
+
+// push
+type PushClientReq struct {
+	Id  string `json:"id"`
+	Cmd string `json:"cmd"`
+	Msg string `json:"msg"`
+}
+
+type Response struct {
+	Id   string `json:"id"`
+	Cmd  string `json:"cmd"`
+	Data struct {
+		Code   uint32 `json:"code"`
+		Result string `json:"result"`
+	}
+}
+
+////////// to server /////////////
+// push msg
 type PushReq struct {
 	Id   string
 	Uuid uint64
 	Msg  string
 }
 
-type PushRsp struct{
+type PushRsp struct {
 	Seq string
 }
 
-// 查询是否在线
+// query isOnline
 type QueryReq struct {
 	Uuid uint64
 }
 
-type QueryRsp struct{
+type QueryRsp struct {
 	IsOnline bool
 }
 
-// route到链接所在实例
+// route
 type RouteReq struct {
+	Id   string
 	Uuid uint64
-	Msg string
+	Msg  string
 }
 
 type RouteRsp struct {
 	Seq string
 }
 
-// push数据中间层
+// push transfer
 type TransferData struct {
+	Seq  string `json:"seq"`
 	Uuid uint64 `json:"uuid"`
 	Msg  string `json:"msg"`
 }

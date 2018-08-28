@@ -6,16 +6,16 @@
 package controller
 
 import (
-	"net/http"
+	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/chuck1024/godog/net/httplib"
-	"hydra/common"
-	"github.com/chuck1024/godog"
-	"hydra/service/core"
 	"hydra/cache"
+	"hydra/common"
+	"hydra/service/core"
+	"net/http"
 )
 
-func PushControl(rsp http.ResponseWriter, req *http.Request){
+func PushControl(rsp http.ResponseWriter, req *http.Request) {
 	rsp.Header().Add("Access-Control-Allow-Origin", httplib.CONTENT_ALL)
 	rsp.Header().Add("Content-Type", httplib.CONTENT_JSON)
 
@@ -52,15 +52,14 @@ func PushControl(rsp http.ResponseWriter, req *http.Request){
 		return
 	}
 
-	if err := cache.SetPush(request.Id); err != nil {
-		godog.Error("[Push] cache ser push occur error: %s", err)
-		dErr = de.MakeCodeError(de.ParameterError, err)
-		return
-	}
-
-	seq, err := core.Push(request.Uuid,request.Msg)
+	seq, err := core.Push(request.Id, request.Uuid, request.Msg)
 	if err != nil {
-		godog.Error("[PushControl] push occur error:%s",err)
+		if err == cache.KeyNotExist {
+			godog.Debug("[PushControl] uuid[%d] is offline.", request.Uuid)
+			dErr = de.MakeCodeError(601, err)
+			return
+		}
+		godog.Error("[PushControl] push occur error:%s", err)
 		dErr = de.MakeCodeError(de.SystemError, err)
 		return
 	}

@@ -6,15 +6,15 @@
 package core
 
 import (
-	"hydra/cache"
-	"github.com/chuck1024/godog"
-	"hydra/common"
 	"encoding/json"
+	"github.com/chuck1024/godog"
 	"github.com/chuck1024/godog/utils"
+	"hydra/cache"
+	"hydra/common"
 	"hydra/service/route"
 )
 
-func Push(uuid uint64,msg string)(string, error){
+func Push(id string, uuid uint64, msg string) (string, error) {
 	localAddr, err := cache.GetUuid(uuid)
 	if err != nil {
 		if err == cache.KeyNotExist {
@@ -27,25 +27,34 @@ func Push(uuid uint64,msg string)(string, error){
 	}
 
 	if localAddr != utils.GetLocalIP() {
-		seq, err := route.Route(localAddr, uuid, msg)
+		seq, err := route.Route(localAddr, id, uuid, msg)
 		if err != nil {
 			godog.Error("[Push] route occur error: %s", err)
 			return "", err
 		}
-		return seq,nil
+		return seq, nil
 	}
 
+	seq := common.BuildSeq(uuid)
+
 	data := &common.TransferData{
+		Seq:  seq,
 		Uuid: uuid,
-		Msg:msg,
+		Msg:  msg,
 	}
 
 	dataByte, err := json.Marshal(data)
 	if err != nil {
-		godog.Error("[Push] json marshal occur error:%s",err)
-		return "",err
+		godog.Error("[Push] json marshal occur error:%s", err)
+		return "", err
 	}
 
-	Hub.SendMsg<-dataByte
-	return common.BuildSeq(uuid), err
+	Hub.SendMsg <- dataByte
+
+	if err := cache.SetPush(id); err != nil {
+		godog.Error("[Push] cache ser push occur error: %s", err)
+		return "", err
+	}
+
+	return seq, err
 }

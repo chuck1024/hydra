@@ -8,10 +8,9 @@ package controller
 import (
 	"github.com/chuck1024/godog"
 	"github.com/gorilla/websocket"
-	"net/http"
 	"hydra/common"
 	"hydra/service/core"
-	"hydra/cache"
+	"net/http"
 )
 
 func WsControl(resp http.ResponseWriter, req *http.Request) {
@@ -34,17 +33,6 @@ func WsControl(resp http.ResponseWriter, req *http.Request) {
 			break
 		}
 
-		dealConn(message, client)
-	}
-}
-
-func dealConn(message []byte, client *common.Client){
-	//handle message according to yourself
-	godog.Debug("[dealConn] receive message:%s",string(message))
-
-	err := cache.SetUuid(client.Uuid)
-	if err != nil {
-		godog.Error("[dealConn] cache set uuid occur error:%s",err)
-		return
+		core.HandleData(message, client)
 	}
 }

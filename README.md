@@ -17,5 +17,5 @@ email : chuck.ch1024@outlook.com
 
 ### 简介
 ```
-基于websocket的十分简单的push服务
+基于websocket的十分简单的push服务，
 ```

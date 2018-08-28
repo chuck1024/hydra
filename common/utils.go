@@ -11,5 +11,5 @@ import (
 )
 
 func BuildSeq(uuid uint64) string {
-	return fmt.Sprintf("%s%d%d",  time.Now().Format("20060102150405"), uuid, 1)
+	return fmt.Sprintf("%s%d%d", time.Now().Format("20060102150405"), uuid, 1)
 }

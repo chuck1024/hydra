@@ -6,15 +6,15 @@
 package controller
 
 import (
+	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/chuck1024/godog/net/httplib"
-	"github.com/chuck1024/godog"
-	"net/http"
-	"hydra/common"
 	"hydra/cache"
+	"hydra/common"
+	"net/http"
 )
 
-func QueryControl(rsp http.ResponseWriter, req *http.Request){
+func QueryControl(rsp http.ResponseWriter, req *http.Request) {
 	rsp.Header().Add("Access-Control-Allow-Origin", httplib.CONTENT_ALL)
 	rsp.Header().Add("Content-Type", httplib.CONTENT_JSON)
 
@@ -52,8 +52,8 @@ func QueryControl(rsp http.ResponseWriter, req *http.Request){
 			godog.Debug("[QueryControl] uuid[%d] is offline.", request.Uuid)
 			return
 		}
-		godog.Error("[QueryControl] cache get uuid occur error:%s",err)
-		dErr = de.MakeCodeError(de.SystemError,err)
+		godog.Error("[QueryControl] cache get uuid occur error:%s", err)
+		dErr = de.MakeCodeError(de.SystemError, err)
 		return
 	}
 

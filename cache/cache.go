@@ -14,9 +14,10 @@ import (
 )
 
 const (
-	uuidPrefix = "hydra:uuid" // key:uuid value:localAddr
-	pushPrefix = "hydra:push" // key:seq
-	pushExpireTime       = 3600
+	uuidPrefix     = "hydra:uuid" // key:uuid value:localAddr
+	expireTime     = 120
+	pushPrefix     = "hydra:push" // key:seq
+	pushExpireTime = 3600
 )
 
 var (
@@ -36,9 +37,9 @@ func SetUuid(uuid uint64) error {
 	value := utils.GetLocalIP()
 	godog.Debug("[SetUuid] key: %s value:%s", key, value)
 
-	err := cache.Set(key, value)
+	err := cache.SetEx(key, expireTime, value)
 	if err != nil {
-		godog.Error("[SetUuid] redis set occur error: %s, key:%s", err, key)
+		godog.Error("[SetUuid] redis SetEx occur error: %s, key:%s", err, key)
 		return err
 	}
 

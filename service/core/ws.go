@@ -6,11 +6,11 @@
 package core
 
 import (
-	"hydra/common"
-	"github.com/gorilla/websocket"
-	"hydra/cache"
 	"encoding/json"
 	"github.com/chuck1024/godog"
+	"github.com/gorilla/websocket"
+	"hydra/cache"
+	"hydra/common"
 )
 
 var Hub = common.ClientHub{
@@ -36,9 +36,9 @@ func Start() {
 
 		case sendMsg := <-Hub.SendMsg:
 			data := &common.TransferData{}
-			err := json.Unmarshal(sendMsg,data)
+			err := json.Unmarshal(sendMsg, data)
 			if err != nil {
-				godog.Error("[Start] json unmarshal occur error:%s",err)
+				godog.Error("[Start] json unmarshal occur error:%s", err)
 				continue
 			}
 
@@ -47,7 +47,15 @@ func Start() {
 				continue
 			}
 
-			conn.Socket.WriteMessage(websocket.TextMessage, []byte(data.Msg))
+			pd := &common.PushClientReq{
+				Id:  data.Seq,
+				Cmd: "PUSH",
+				Msg: data.Msg,
+			}
+
+			pdb, _ := json.Marshal(pd)
+
+			conn.Socket.WriteMessage(websocket.TextMessage, pdb)
 		}
 	}
 }
