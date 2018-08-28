@@ -56,7 +56,7 @@ func PushControl(rsp http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		if err == cache.KeyNotExist {
 			godog.Debug("[PushControl] uuid[%d] is offline.", request.Uuid)
-			dErr = de.MakeCodeError(601, err)
+			dErr = de.MakeCodeError(common.Offline, err)
 			return
 		}
 		godog.Error("[PushControl] push occur error:%s", err)
