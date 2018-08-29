@@ -16,10 +16,7 @@ email : chuck.ch1024@outlook.com
 >* [websocket](https://github.com/gorilla/websocket/)
 
 ### 简介
-```
 hydra是一个基于websocket实现的简单的push服务，实现客户度登录、心跳、服务端对客户端的push数据、查询用户是否在线、多个实例相互路由等功能。
-
-```
 
 ### 方案设计
 框架图：![frame diagram](frame.png)
@@ -193,4 +190,4 @@ received:  {20180829174226102411 push test success}
 ```
 
 ## License
-diana is released under the [**MIT LICENSE**](http://opensource.org/licenses/mit-license.php).  
+hydra is released under the [**MIT LICENSE**](http://opensource.org/licenses/mit-license.php).  
