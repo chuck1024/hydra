@@ -6,6 +6,7 @@
 package controller
 
 import (
+	"errors"
 	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/chuck1024/godog/net/httplib"
@@ -48,7 +49,7 @@ func PushControl(rsp http.ResponseWriter, req *http.Request) {
 
 	if cache.GetPush(request.Id) {
 		godog.Error("[Push] cache get push, id[%s] is exist", request.Id)
-		dErr = de.MakeCodeError(de.ParameterError, err)
+		dErr = de.MakeCodeError(de.ParameterError, errors.New("already sent id"))
 		return
 	}
 

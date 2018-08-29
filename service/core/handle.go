@@ -26,7 +26,7 @@ func HandleData(message []byte, client *common.Client) {
 			godog.Error("[HandleData] response json Marshal occur error: %s", err)
 		}
 
-		godog.Debug("[HandleData] deal conn. response: %v", *response)
+		godog.Debug("[HandleData] handle data. response: %v", *response)
 
 		client.Socket.WriteMessage(websocket.TextMessage, respByte)
 	}()
@@ -40,7 +40,7 @@ func HandleData(message []byte, client *common.Client) {
 	response.Id = data.Id
 	response.Cmd = data.Cmd
 
-	godog.Debug("[HandleData] deal conn. id: %s, cmd:%s", data.Id, data.Cmd)
+	godog.Debug("[HandleData] handle data. id: %s, cmd:%s", data.Id, data.Cmd)
 
 	switch data.Cmd {
 	case "login":
