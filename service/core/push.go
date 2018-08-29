@@ -26,7 +26,9 @@ func Push(id string, uuid uint64, msg string) (string, error) {
 		return "", err
 	}
 
-	if localAddr != utils.GetLocalIP() {
+	ip := utils.GetLocalIP()
+	//ip := utils.GetLocalIP() +":" + strconv.Itoa(godog.AppConfig.BaseConfig.Server.HttpPort)
+	if localAddr != ip {
 		seq, err := route.Route(localAddr, id, uuid, msg)
 		if err != nil {
 			godog.Error("[Push] route occur error: %s", err)

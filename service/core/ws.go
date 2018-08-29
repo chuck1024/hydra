@@ -49,7 +49,7 @@ func Start() {
 
 			pd := &common.PushClientReq{
 				Id:  data.Seq,
-				Cmd: "PUSH",
+				Cmd: "push",
 				Msg: data.Msg,
 			}
 

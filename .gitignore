@@ -13,4 +13,5 @@
 
 .idea
 log/
+hydra.*
 dumpPanic.-dump-*

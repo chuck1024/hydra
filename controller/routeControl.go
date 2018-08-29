@@ -43,7 +43,7 @@ func RouteControl(rsp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	godog.Info("[RouteControl] received request: %#v", request)
+	godog.Info("[RouteControl] received request: %v", *request)
 
 	seq, err := core.Push(request.Id, request.Uuid, request.Msg)
 	if err != nil {

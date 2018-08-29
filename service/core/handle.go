@@ -21,6 +21,11 @@ func HandleData(message []byte, client *common.Client) {
 	godog.Debug("[HandleData] receive message:%s", string(message))
 
 	defer func() {
+		if response.Cmd == "push" {
+			return
+		}
+
+		response.Data.Result = de.GetErrorType(int(response.Data.Code))
 		respByte, err := json.Marshal(response)
 		if err != nil {
 			godog.Error("[HandleData] response json Marshal occur error: %s", err)
@@ -63,9 +68,21 @@ func HandleData(message []byte, client *common.Client) {
 		}
 
 	case "heartbeat":
-		godog.Debug("[HandleData] heartbeat uuid:", client.Uuid)
+		godog.Debug("[HandleData] heartbeat uuid: %d", client.Uuid)
 
 		if client.Uuid > 0 {
+			if _, err := cache.GetUuid(client.Uuid); err != nil {
+				if err == cache.KeyNotExist {
+					response.Data.Code = uint32(de.SystemError)
+					godog.Debug("[HandleData] heartbeat user not login")
+					break
+				}
+
+				response.Data.Code = uint32(de.SystemError)
+				godog.Error("[HandleData] heartbeat SetUuid occur error: %s, uuid:%d ", err, client.Uuid)
+				break
+			}
+
 			if err := cache.SetUuid(client.Uuid); err != nil {
 				response.Data.Code = uint32(de.SystemError)
 				godog.Error("[HandleData] heartbeat SetUuid occur error: %s, uuid:%d ", err, client.Uuid)
@@ -76,6 +93,16 @@ func HandleData(message []byte, client *common.Client) {
 			response.Data.Code = uint32(de.SystemError)
 			godog.Debug("[HandleData] heartbeat user not login")
 		}
+
+	case "push":
+		rsp := &common.Response{}
+		if err := json.Unmarshal(message, rsp); err != nil {
+			response.Data.Code = uint32(de.SystemError)
+			godog.Error("[HandleData] push response json unmarshal occur error: %s", err)
+			break
+		}
+
+		godog.Debug("[HandleData] push response: %v", rsp)
 
 	default:
 		response.Data.Code = uint32(de.ParameterError)

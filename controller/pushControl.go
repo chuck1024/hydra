@@ -45,7 +45,7 @@ func PushControl(rsp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	godog.Info("[PushControl] received request: %#v", request)
+	godog.Info("[PushControl] received request: %v", *request)
 
 	if cache.GetPush(request.Id) {
 		godog.Error("[Push] cache get push, id[%s] is exist", request.Id)

@@ -35,6 +35,7 @@ func getPushKey(seq string) string {
 func SetUuid(uuid uint64) error {
 	key := getUuidKey(uuid)
 	value := utils.GetLocalIP()
+	//value := utils.GetLocalIP() + ":" + strconv.Itoa(godog.AppConfig.BaseConfig.Server.HttpPort)
 	godog.Debug("[SetUuid] key: %s value:%s", key, value)
 
 	err := cache.SetEx(key, expireTime, value)
