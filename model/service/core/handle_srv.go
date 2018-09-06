@@ -10,7 +10,7 @@ import (
 	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/gorilla/websocket"
-	"hydra/cache"
+	"hydra/model/dao/cache"
 	"hydra/common"
 )
 

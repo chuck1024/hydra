@@ -6,15 +6,17 @@
 package controller
 
 import (
+	"errors"
 	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/chuck1024/godog/net/httplib"
+	"hydra/model/dao/cache"
 	"hydra/common"
-	"hydra/service/core"
+	"hydra/model/service/core"
 	"net/http"
 )
 
-func RouteControl(rsp http.ResponseWriter, req *http.Request) {
+func PushControl(rsp http.ResponseWriter, req *http.Request) {
 	rsp.Header().Add("Access-Control-Allow-Origin", httplib.CONTENT_ALL)
 	rsp.Header().Add("Content-Type", httplib.CONTENT_JSON)
 
@@ -27,12 +29,12 @@ func RouteControl(rsp http.ResponseWriter, req *http.Request) {
 	}
 
 	var dErr *de.CodeError
-	request := &common.RouteReq{}
-	response := &common.RouteRsp{}
+	request := &common.PushReq{}
+	response := &common.PushRsp{}
 
 	defer func() {
 		if dErr != nil {
-			godog.Error("[RouteControl], errorCode: %d, errMsg: %s", dErr.Code(), dErr.Detail())
+			godog.Error("[PushControl], errorCode: %d, errMsg: %s", dErr.Code(), dErr.Detail())
 		}
 		rsp.Write(httplib.LogGetResponseInfo(req, dErr, response))
 	}()
@@ -43,13 +45,26 @@ func RouteControl(rsp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	godog.Info("[RouteControl] received request: %v", *request)
+	godog.Info("[PushControl] received request: %v", *request)
+
+	if cache.GetPush(request.Id) {
+		godog.Error("[Push] cache get push, id[%s] is exist", request.Id)
+		dErr = de.MakeCodeError(de.ParameterError, errors.New("already sent id"))
+		return
+	}
 
 	seq, err := core.Push(request.Id, request.Uuid, request.Msg)
 	if err != nil {
+		if err == cache.KeyNotExist {
+			godog.Debug("[PushControl] uuid[%d] is offline.", request.Uuid)
+			dErr = de.MakeCodeError(common.Offline, err)
+			return
+		}
+		godog.Error("[PushControl] push occur error:%s", err)
 		dErr = de.MakeCodeError(de.SystemError, err)
 		return
 	}
 
 	response.Seq = seq
+	return
 }

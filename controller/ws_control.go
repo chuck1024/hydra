@@ -9,7 +9,7 @@ import (
 	"github.com/chuck1024/godog"
 	"github.com/gorilla/websocket"
 	"hydra/common"
-	"hydra/service/core"
+	"hydra/model/service/core"
 	"net/http"
 )
 

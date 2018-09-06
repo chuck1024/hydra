@@ -6,17 +6,15 @@
 package controller
 
 import (
-	"errors"
 	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/chuck1024/godog/net/httplib"
-	"hydra/cache"
+	"hydra/model/dao/cache"
 	"hydra/common"
-	"hydra/service/core"
 	"net/http"
 )
 
-func PushControl(rsp http.ResponseWriter, req *http.Request) {
+func QueryControl(rsp http.ResponseWriter, req *http.Request) {
 	rsp.Header().Add("Access-Control-Allow-Origin", httplib.CONTENT_ALL)
 	rsp.Header().Add("Content-Type", httplib.CONTENT_JSON)
 
@@ -29,42 +27,36 @@ func PushControl(rsp http.ResponseWriter, req *http.Request) {
 	}
 
 	var dErr *de.CodeError
-	request := &common.PushReq{}
-	response := &common.PushRsp{}
+	request := &common.QueryReq{}
+	response := &common.QueryRsp{}
 
 	defer func() {
 		if dErr != nil {
-			godog.Error("[PushControl], errorCode: %d, errMsg: %s", dErr.Code(), dErr.Detail())
+			godog.Error("[QueryControl], errorCode: %d, errMsg: %s", dErr.Code(), dErr.Detail())
 		}
 		rsp.Write(httplib.LogGetResponseInfo(req, dErr, response))
 	}()
 
-	err := httplib.GetRequestBody(req, &request)
+	err := httplib.GetRequestBody(req, request)
 	if err != nil {
 		dErr = de.MakeCodeError(de.ParameterError, err)
 		return
 	}
 
-	godog.Info("[PushControl] received request: %v", *request)
+	godog.Info("[QueryControl] received request: %v", *request)
 
-	if cache.GetPush(request.Id) {
-		godog.Error("[Push] cache get push, id[%s] is exist", request.Id)
-		dErr = de.MakeCodeError(de.ParameterError, errors.New("already sent id"))
-		return
-	}
-
-	seq, err := core.Push(request.Id, request.Uuid, request.Msg)
+	_, err = cache.GetUuid(request.Uuid)
 	if err != nil {
 		if err == cache.KeyNotExist {
-			godog.Debug("[PushControl] uuid[%d] is offline.", request.Uuid)
-			dErr = de.MakeCodeError(common.Offline, err)
+			response.IsOnline = false
+			godog.Debug("[QueryControl] uuid[%d] is offline.", request.Uuid)
 			return
 		}
-		godog.Error("[PushControl] push occur error:%s", err)
+		godog.Error("[QueryControl] cache get uuid occur error:%s", err)
 		dErr = de.MakeCodeError(de.SystemError, err)
 		return
 	}
 
-	response.Seq = seq
+	response.IsOnline = true
 	return
 }

@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"github.com/chuck1024/godog"
 	"github.com/gorilla/websocket"
-	"hydra/cache"
+	"hydra/model/dao/cache"
 	"hydra/common"
 )
 

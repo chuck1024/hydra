@@ -9,12 +9,12 @@ import (
 	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/chuck1024/godog/net/httplib"
-	"hydra/cache"
 	"hydra/common"
+	"hydra/model/service/core"
 	"net/http"
 )
 
-func QueryControl(rsp http.ResponseWriter, req *http.Request) {
+func RouteControl(rsp http.ResponseWriter, req *http.Request) {
 	rsp.Header().Add("Access-Control-Allow-Origin", httplib.CONTENT_ALL)
 	rsp.Header().Add("Content-Type", httplib.CONTENT_JSON)
 
@@ -27,36 +27,29 @@ func QueryControl(rsp http.ResponseWriter, req *http.Request) {
 	}
 
 	var dErr *de.CodeError
-	request := &common.QueryReq{}
-	response := &common.QueryRsp{}
+	request := &common.RouteReq{}
+	response := &common.RouteRsp{}
 
 	defer func() {
 		if dErr != nil {
-			godog.Error("[QueryControl], errorCode: %d, errMsg: %s", dErr.Code(), dErr.Detail())
+			godog.Error("[RouteControl], errorCode: %d, errMsg: %s", dErr.Code(), dErr.Detail())
 		}
 		rsp.Write(httplib.LogGetResponseInfo(req, dErr, response))
 	}()
 
-	err := httplib.GetRequestBody(req, request)
+	err := httplib.GetRequestBody(req, &request)
 	if err != nil {
 		dErr = de.MakeCodeError(de.ParameterError, err)
 		return
 	}
 
-	godog.Info("[QueryControl] received request: %v", *request)
+	godog.Info("[RouteControl] received request: %v", *request)
 
-	_, err = cache.GetUuid(request.Uuid)
+	seq, err := core.Push(request.Id, request.Uuid, request.Msg)
 	if err != nil {
-		if err == cache.KeyNotExist {
-			response.IsOnline = false
-			godog.Debug("[QueryControl] uuid[%d] is offline.", request.Uuid)
-			return
-		}
-		godog.Error("[QueryControl] cache get uuid occur error:%s", err)
 		dErr = de.MakeCodeError(de.SystemError, err)
 		return
 	}
 
-	response.IsOnline = true
-	return
+	response.Seq = seq
 }
