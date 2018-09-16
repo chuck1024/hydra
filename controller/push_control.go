@@ -12,7 +12,7 @@ import (
 	"github.com/chuck1024/godog/net/httplib"
 	"hydra/model/dao/cache"
 	"hydra/common"
-	"hydra/model/service/core"
+	"hydra/model/service"
 	"net/http"
 )
 
@@ -53,7 +53,7 @@ func PushControl(rsp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	seq, err := core.Push(request.Id, request.Uuid, request.Msg)
+	seq, err := service.Push(request.Id, request.Uuid, request.Msg)
 	if err != nil {
 		if err == cache.KeyNotExist {
 			godog.Debug("[PushControl] uuid[%d] is offline.", request.Uuid)

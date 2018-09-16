@@ -9,7 +9,7 @@ import (
 	"github.com/chuck1024/godog"
 	"github.com/gorilla/websocket"
 	"hydra/common"
-	"hydra/model/service/core"
+	"hydra/model/service"
 	"net/http"
 )
 
@@ -27,12 +27,12 @@ func WsControl(resp http.ResponseWriter, req *http.Request) {
 	for {
 		_, message, err := client.Socket.ReadMessage()
 		if err != nil {
-			core.Hub.Unregister <- client
+			service.Hub.Unregister <- client
 			client.Socket.Close()
 			godog.Debug("[WsControl] %s disconnected.", client.Socket.RemoteAddr().String())
 			break
 		}
 
-		core.HandleData(message, client)
+		service.HandleData(message, client)
 	}
 }

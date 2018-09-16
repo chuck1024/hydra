@@ -9,7 +9,7 @@ import (
 	"github.com/chuck1024/godog"
 	"github.com/chuck1024/godog/dao/cache"
 	"hydra/controller"
-	"hydra/model/service/core"
+	"hydra/model/service"
 )
 
 func register() {
@@ -25,7 +25,7 @@ func main() {
 
 	register()
 
-	go core.Start()
+	go service.Start()
 
 	if err := godog.Run(); err != nil {
 		godog.Error("Error occurs, error = %s", err.Error())

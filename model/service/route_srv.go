@@ -3,7 +3,7 @@
  * Author: Chuck1024
  */
 
-package route
+package service
 
 import (
 	"encoding/json"

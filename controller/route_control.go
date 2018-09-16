@@ -10,7 +10,7 @@ import (
 	de "github.com/chuck1024/godog/error"
 	"github.com/chuck1024/godog/net/httplib"
 	"hydra/common"
-	"hydra/model/service/core"
+	"hydra/model/service"
 	"net/http"
 )
 
@@ -45,7 +45,7 @@ func RouteControl(rsp http.ResponseWriter, req *http.Request) {
 
 	godog.Info("[RouteControl] received request: %v", *request)
 
-	seq, err := core.Push(request.Id, request.Uuid, request.Msg)
+	seq, err := service.Push(request.Id, request.Uuid, request.Msg)
 	if err != nil {
 		dErr = de.MakeCodeError(de.SystemError, err)
 		return
