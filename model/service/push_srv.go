@@ -11,7 +11,6 @@ import (
 	"github.com/chuck1024/godog/utils"
 	"hydra/model/dao/cache"
 	"hydra/common"
-	"hydra/model/service"
 )
 
 func Push(id string, uuid uint64, msg string) (string, error) {
@@ -29,7 +28,7 @@ func Push(id string, uuid uint64, msg string) (string, error) {
 	ip := utils.GetLocalIP()
 	//ip := utils.GetLocalIP() +":" + strconv.Itoa(godog.AppConfig.BaseConfig.Server.HttpPort)
 	if localAddr != ip {
-		seq, err := service.Route(localAddr, id, uuid, msg)
+		seq, err := Route(localAddr, id, uuid, msg)
 		if err != nil {
 			godog.Error("[Push] route occur error: %s", err)
 			return "", err
