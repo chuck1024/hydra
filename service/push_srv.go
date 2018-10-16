@@ -9,8 +9,9 @@ import (
 	"encoding/json"
 	"github.com/chuck1024/godog"
 	"github.com/chuck1024/godog/utils"
-	"hydra/model/dao/cache"
 	"hydra/common"
+	"hydra/dao/cache"
+	"hydra/model"
 )
 
 func Push(id string, uuid uint64, msg string) (string, error) {
@@ -38,7 +39,7 @@ func Push(id string, uuid uint64, msg string) (string, error) {
 
 	seq := common.BuildSeq(uuid)
 
-	data := &common.TransferData{
+	data := &model.TransferData{
 		Seq:  seq,
 		Uuid: uuid,
 		Msg:  msg,

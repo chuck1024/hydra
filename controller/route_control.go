@@ -9,8 +9,8 @@ import (
 	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/chuck1024/godog/net/httplib"
-	"hydra/common"
-	"hydra/model/service"
+	"hydra/model"
+	"hydra/service"
 	"net/http"
 )
 
@@ -27,8 +27,8 @@ func RouteControl(rsp http.ResponseWriter, req *http.Request) {
 	}
 
 	var dErr *de.CodeError
-	request := &common.RouteReq{}
-	response := &common.RouteRsp{}
+	request := &model.RouteReq{}
+	response := &model.RouteRsp{}
 
 	defer func() {
 		if dErr != nil {

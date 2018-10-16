@@ -9,15 +9,15 @@ import (
 	"encoding/json"
 	"github.com/chuck1024/godog"
 	"github.com/gorilla/websocket"
-	"hydra/model/dao/cache"
-	"hydra/common"
+	"hydra/dao/cache"
+	"hydra/model"
 )
 
-var Hub = common.ClientHub{
+var Hub = model.ClientHub{
 	SendMsg:    make(chan []byte, 10000),
-	Register:   make(chan *common.Client, 10000),
-	Unregister: make(chan *common.Client, 10000),
-	Clients:    make(map[uint64]*common.Client),
+	Register:   make(chan *model.Client, 10000),
+	Unregister: make(chan *model.Client, 10000),
+	Clients:    make(map[uint64]*model.Client),
 }
 
 func Start() {
@@ -35,7 +35,7 @@ func Start() {
 			}
 
 		case sendMsg := <-Hub.SendMsg:
-			data := &common.TransferData{}
+			data := &model.TransferData{}
 			err := json.Unmarshal(sendMsg, data)
 			if err != nil {
 				godog.Error("[Start] json unmarshal occur error:%s", err)
@@ -47,7 +47,7 @@ func Start() {
 				continue
 			}
 
-			pd := &common.PushClientReq{
+			pd := &model.PushClientReq{
 				Id:  data.Seq,
 				Cmd: "push",
 				Msg: data.Msg,

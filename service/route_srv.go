@@ -9,14 +9,14 @@ import (
 	"encoding/json"
 	"github.com/chuck1024/godog"
 	"github.com/chuck1024/godog/net/httplib"
-	"hydra/common"
+	"hydra/model"
 	"strconv"
 )
 
 func Route(local string, id string, uuid uint64, msg string) (string, error) {
 	url := "http://" + local + ":" + strconv.Itoa(godog.AppConfig.BaseConfig.Server.HttpPort) + "/route"
 	//url := "http://" + local  + "/route"
-	request := &common.RouteReq{
+	request := &model.RouteReq{
 		Id:   id,
 		Uuid: uuid,
 		Msg:  msg,
@@ -30,7 +30,7 @@ func Route(local string, id string, uuid uint64, msg string) (string, error) {
 	}
 
 	dataByte, _ := json.Marshal(resp.Data)
-	response := &common.RouteRsp{}
+	response := &model.RouteRsp{}
 	json.Unmarshal(dataByte, response)
 
 	godog.Debug("[Route] seq:%s", response.Seq)

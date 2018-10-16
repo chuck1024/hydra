@@ -8,8 +8,8 @@ package controller
 import (
 	"github.com/chuck1024/godog"
 	"github.com/gorilla/websocket"
-	"hydra/common"
-	"hydra/model/service"
+	"hydra/model"
+	"hydra/service"
 	"net/http"
 )
 
@@ -22,7 +22,7 @@ func WsControl(resp http.ResponseWriter, req *http.Request) {
 
 	godog.Debug("[WsControl] %s connected.", conn.RemoteAddr().String())
 
-	client := &common.Client{Id: conn.RemoteAddr().String(), Socket: conn}
+	client := &model.Client{Id: conn.RemoteAddr().String(), Socket: conn}
 
 	for {
 		_, message, err := client.Socket.ReadMessage()

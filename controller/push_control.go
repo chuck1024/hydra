@@ -10,9 +10,10 @@ import (
 	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/chuck1024/godog/net/httplib"
-	"hydra/model/dao/cache"
 	"hydra/common"
-	"hydra/model/service"
+	"hydra/dao/cache"
+	"hydra/model"
+	"hydra/service"
 	"net/http"
 )
 
@@ -29,8 +30,8 @@ func PushControl(rsp http.ResponseWriter, req *http.Request) {
 	}
 
 	var dErr *de.CodeError
-	request := &common.PushReq{}
-	response := &common.PushRsp{}
+	request := &model.PushReq{}
+	response := &model.PushRsp{}
 
 	defer func() {
 		if dErr != nil {

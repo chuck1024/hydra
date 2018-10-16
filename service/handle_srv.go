@@ -10,12 +10,12 @@ import (
 	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/gorilla/websocket"
-	"hydra/model/dao/cache"
-	"hydra/common"
+	"hydra/dao/cache"
+	"hydra/model"
 )
 
-func HandleData(message []byte, client *common.Client) {
-	response := &common.Response{}
+func HandleData(message []byte, client *model.Client) {
+	response := &model.Response{}
 	response.Data.Code = uint32(de.Success)
 	//handle message according to yourself
 	godog.Debug("[HandleData] receive message:%s", string(message))
@@ -36,7 +36,7 @@ func HandleData(message []byte, client *common.Client) {
 		client.Socket.WriteMessage(websocket.TextMessage, respByte)
 	}()
 
-	data := &common.HeartBeatReq{}
+	data := &model.HeartBeatReq{}
 	if err := json.Unmarshal(message, data); err != nil {
 		response.Data.Code = uint32(de.SystemError)
 		godog.Error("[HandleData] json unmarshal occur error: %s", err)
@@ -49,7 +49,7 @@ func HandleData(message []byte, client *common.Client) {
 
 	switch data.Cmd {
 	case "login":
-		loginData := &common.LoginReq{}
+		loginData := &model.LoginReq{}
 		if err := json.Unmarshal(message, loginData); err != nil {
 			response.Data.Code = uint32(de.SystemError)
 			godog.Error("[HandleData] loginData json unmarshal occur error: %s", err)
@@ -95,7 +95,7 @@ func HandleData(message []byte, client *common.Client) {
 		}
 
 	case "push":
-		rsp := &common.Response{}
+		rsp := &model.Response{}
 		if err := json.Unmarshal(message, rsp); err != nil {
 			response.Data.Code = uint32(de.SystemError)
 			godog.Error("[HandleData] push response json unmarshal occur error: %s", err)

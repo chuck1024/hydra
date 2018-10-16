@@ -9,7 +9,7 @@ import (
 	"github.com/chuck1024/godog"
 	"github.com/chuck1024/godog/dao/cache"
 	"hydra/controller"
-	"hydra/model/service"
+	"hydra/service"
 )
 
 func register() {

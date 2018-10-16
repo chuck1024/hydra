@@ -9,8 +9,8 @@ import (
 	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/chuck1024/godog/net/httplib"
-	"hydra/model/dao/cache"
-	"hydra/common"
+	"hydra/dao/cache"
+	"hydra/model"
 	"net/http"
 )
 
@@ -27,8 +27,8 @@ func QueryControl(rsp http.ResponseWriter, req *http.Request) {
 	}
 
 	var dErr *de.CodeError
-	request := &common.QueryReq{}
-	response := &common.QueryRsp{}
+	request := &model.QueryReq{}
+	response := &model.QueryRsp{}
 
 	defer func() {
 		if dErr != nil {
