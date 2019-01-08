@@ -7,9 +7,9 @@ package controller
 
 import (
 	"github.com/chuck1024/godog"
+	"github.com/chuck1024/hydra/model"
+	"github.com/chuck1024/hydra/service"
 	"github.com/gorilla/websocket"
-	"hydra/model"
-	"hydra/service"
 	"net/http"
 )
 

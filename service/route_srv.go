@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"github.com/chuck1024/godog"
 	"github.com/chuck1024/godog/net/httplib"
-	"hydra/model"
+	"github.com/chuck1024/hydra/model"
 	"strconv"
 )
 

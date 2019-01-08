@@ -9,8 +9,8 @@ import (
 	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/chuck1024/godog/net/httplib"
-	"hydra/dao/cache"
-	"hydra/model"
+	"github.com/chuck1024/hydra/dao/cache"
+	"github.com/chuck1024/hydra/model"
 	"net/http"
 )
 
