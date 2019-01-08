@@ -8,8 +8,8 @@ package main
 import (
 	"github.com/chuck1024/godog"
 	"github.com/chuck1024/godog/dao/cache"
-	"hydra/controller"
-	"hydra/service"
+	"github.com/chuck1024/hydra/controller"
+	"github.com/chuck1024/hydra/service"
 )
 
 func register() {

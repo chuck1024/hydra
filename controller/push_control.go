@@ -10,10 +10,10 @@ import (
 	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/chuck1024/godog/net/httplib"
-	"hydra/common"
-	"hydra/dao/cache"
-	"hydra/model"
-	"hydra/service"
+	"github.com/chuck1024/hydra/common"
+	"github.com/chuck1024/hydra/dao/cache"
+	"github.com/chuck1024/hydra/model"
+	"github.com/chuck1024/hydra/service"
 	"net/http"
 )
 

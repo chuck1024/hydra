@@ -9,9 +9,9 @@ import (
 	"encoding/json"
 	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
+	"github.com/chuck1024/hydra/dao/cache"
+	"github.com/chuck1024/hydra/model"
 	"github.com/gorilla/websocket"
-	"hydra/dao/cache"
-	"hydra/model"
 )
 
 func HandleData(message []byte, client *model.Client) {
