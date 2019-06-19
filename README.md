@@ -61,7 +61,7 @@ hydra是一个基于websocket实现的简单的push服务，实现客户端登�
 
 3、启动第一个客户端，并输入login登录第一个实例，uuid为10240，注意客户端自己每分钟自动发送心跳
 >$ cd client
->$ go build client 
+>$ go build client.go 
 >$ ./client -addr 127.0.0.1:10240 -uuid 10240
 login
 received:  {1 login {200 ok}}
@@ -90,7 +90,7 @@ received:  {1 login {200 ok}}
 [2018/08/29 17:41:02.257] DEBUG [handle.go:34] [HandleData] handle data. response: {1 login {200 ok}}
 
 5、查询用户是否在线
->$ curl -X POST http://127.0.0.1:10240/query -d '{"uuid":10240}'
+>$ curl -X POST http://127.0.0.1:10240/query -H "Content-Type: application/json" --data '{"uuid":10240}'
 {"code":200,"msg":"ok","data":{"IsOnline":true}}
 
 服务端日志：
@@ -117,7 +117,7 @@ received:  {1 login {200 ok}}
 [2018/08/29 17:41:54.673] DEBUG [handle.go:34] [HandleData] handle data. response: {2 heartbeat {200 ok}}
 
 7、向用户10240发送push数据，连接的是第一个实例
->$ curl -X POST http://127.0.0.1:10240/push -d '{"id":"1","uuid":10240,"msg":"test success"}'
+>$ curl -X POST http://127.0.0.1:10240/push -H "Content-Type: application/json" --data '{"id":"1","uuid":10240,"msg":"test success"}'
 {"code":200,"msg":"ok","data":{"Seq":"20180829174214102401"}}
 
 第一个客户端：
@@ -137,7 +137,7 @@ received:  {20180829174214102401 push test success}
 [2018/08/29 17:42:14.380] DEBUG [handle.go:105] [HandleData] push response: &{20180829174214102401 push {200 ok}}
 
 8、向用户10241发送push数据，连接的是第一个实例，测试路由功能
->$ curl -X POST http://127.0.0.1:10240/push -d '{"id":"2","uuid":10241,"msg":"test success"}'
+>$ curl -X POST http://127.0.0.1:10240/push -H "Content-Type: application/json" --data '{"id":"2","uuid":10241,"msg":"test success"}'
 {"code":200,"msg":"ok","data":{"Seq":"20180829174226102411"}}
 
 第二个客户端：
@@ -168,7 +168,7 @@ received:  {20180829174226102411 push test success}
 [2018/08/29 17:42:26.818] DEBUG [httplib.go:263] [LogGetResponseInfo] HANDLE_LOG:request={Method:POST URL:/push User_id: X_Auth_Token: Form:map[] Body:{"id":"2","uuid":10241,"msg":"test success"}},response={"code":200,"msg":"ok","data":{"Seq":"20180829174226102411"}}
 
 9、关闭第一个客户端，再查询用户是否在线：
->$ curl -X POST http://127.0.0.1:10240/query -d '{"uuid":10240}'
+>$ curl -X POST http://127.0.0.1:10240/query -H "Content-Type: application/json" --data '{"uuid":10240}'
 {"code":200,"msg":"ok","data":{"IsOnline":false}}
 
 第一个实例日志：
