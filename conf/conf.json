@@ -1,10 +1,5 @@
 {
-  "Log": {
-    "File": "log/hydra.log",
-    "Level": "DEBUG",
-    "Stdout": true,
-    "Suffix": "20060102"
-  },
+  "Log": "conf/log.xml",
   "Prog": {
     "CPU": 0,
     "HealthPort": 0
@@ -15,5 +10,5 @@
     "TcpPort": 0
   },
 
-  "redis" : "tcp://127.0.0.1:6379/0?cluster=false&idleTimeout=1s&maxIdle=10&madActive=200"
+  "redis" : "tcp://127.0.0.1:6379?idleTimeout=1s&maxIdle=10&madActive=200"
 }

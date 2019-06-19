@@ -22,7 +22,7 @@ var uuid = flag.Uint64("uuid", 10240, "uuid")
 
 func main() {
 	flag.Parse()
-	u := url.URL{Scheme: "ws", Host: *addr, Path: "/hydra"}
+	u := url.URL{Scheme: "ws", Host: *addr, Path: "/ws/hydra"}
 	dialer := &websocket.Dialer{}
 
 	conn, _, err := dialer.Dial(u.String(), nil)

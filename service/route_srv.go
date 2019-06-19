@@ -7,14 +7,16 @@ package service
 
 import (
 	"encoding/json"
+	"github.com/chuck1024/doglog"
 	"github.com/chuck1024/godog"
-	"github.com/chuck1024/godog/net/httplib"
 	"github.com/chuck1024/hydra/model"
 	"strconv"
+	"time"
 )
 
 func Route(local string, id string, uuid uint64, msg string) (string, error) {
-	url := "http://" + local + ":" + strconv.Itoa(godog.AppConfig.BaseConfig.Server.HttpPort) + "/route"
+	dog := godog.Default()
+	url := "http://" + local + ":" + strconv.Itoa(dog.Config.BaseConfig.Server.HttpPort)
 	//url := "http://" + local  + "/route"
 	request := &model.RouteReq{
 		Id:   id,
@@ -22,18 +24,18 @@ func Route(local string, id string, uuid uint64, msg string) (string, error) {
 		Msg:  msg,
 	}
 
-	resp := &httplib.ResponseData{}
-	err := httplib.SendToServer(httplib.HttpPost, url, nil, nil, request, resp)
+	client := dog.NewHttpClient(time.Duration(0), url)
+	resp, _, err := client.Method("POST", "route", nil, request)
 	if err != nil {
-		godog.Error("[Route] send to server occur error: %s", err)
+		doglog.Error("[Route] send to server occur error: %s", err)
 		return "", err
 	}
 
-	dataByte, _ := json.Marshal(resp.Data)
+	dataByte, _ := json.Marshal(resp.Body)
 	response := &model.RouteRsp{}
 	json.Unmarshal(dataByte, response)
 
-	godog.Debug("[Route] seq:%s", response.Seq)
+	doglog.Debug("[Route] seq:%s", response.Seq)
 	seq := response.Seq
 	return seq, nil
 }

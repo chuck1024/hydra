@@ -37,13 +37,15 @@ func register(dog *godog.Engine) {
 			r.POST(k, f)
 		}
 
-		r.GET("/hydra", controller.WsControl)
+		rr := g.Group("ws")
+		rr.GET("/hydra", controller.WsControl)
 
 		return nil
 	})
 }
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	dog := godog.Default()
 
 	url, _ := dog.Config.String("redis")
