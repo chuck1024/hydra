@@ -22,7 +22,7 @@ func HandleData(message []byte, client *model.Client) {
 	doglog.Debug("[HandleData] receive message:%s", string(message))
 
 	defer func() {
-		if response.Cmd == "push" {
+		if response.Cmd == common.PushCmd {
 			return
 		}
 
