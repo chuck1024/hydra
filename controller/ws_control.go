@@ -6,21 +6,22 @@
 package controller
 
 import (
-	"github.com/chuck1024/godog"
+	"github.com/chuck1024/doglog"
 	"github.com/chuck1024/hydra/model"
 	"github.com/chuck1024/hydra/service"
+	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"net/http"
 )
 
-func WsControl(resp http.ResponseWriter, req *http.Request) {
-	conn, err := (&websocket.Upgrader{CheckOrigin: func(r *http.Request) bool { return true }}).Upgrade(resp, req, nil)
+func WsControl(c *gin.Context) {
+	conn, err := (&websocket.Upgrader{CheckOrigin: func(r *http.Request) bool { return true }}).Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
-		http.NotFound(resp, req)
+		http.NotFound(c.Writer, c.Request)
 		return
 	}
 
-	godog.Debug("[WsControl] %s connected.", conn.RemoteAddr().String())
+	doglog.Debug("[WsControl] %s connected.", conn.RemoteAddr().String())
 
 	client := &model.Client{Id: conn.RemoteAddr().String(), Socket: conn}
 
@@ -29,7 +30,7 @@ func WsControl(resp http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			service.Hub.Unregister <- client
 			client.Socket.Close()
-			godog.Debug("[WsControl] %s disconnected.", client.Socket.RemoteAddr().String())
+			doglog.Debug("[WsControl] %s disconnected.", client.Socket.RemoteAddr().String())
 			break
 		}
 

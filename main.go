@@ -6,29 +6,65 @@
 package main
 
 import (
+	"github.com/chuck1024/doglog"
 	"github.com/chuck1024/godog"
-	"github.com/chuck1024/godog/dao/cache"
+	"github.com/chuck1024/godog/net/httplib"
 	"github.com/chuck1024/hydra/controller"
+	"github.com/chuck1024/hydra/dao/cache"
 	"github.com/chuck1024/hydra/service"
+	"github.com/chuck1024/redisdb"
+	"github.com/gin-gonic/gin"
 )
 
-func register() {
-	godog.AppHttp.AddHttpHandler("/hydra", controller.WsControl)
-	godog.AppHttp.AddHttpHandler("/push", controller.PushControl)
-	godog.AppHttp.AddHttpHandler("/query", controller.QueryControl)
-	godog.AppHttp.AddHttpHandler("/route", controller.RouteControl)
+func register(dog *godog.Engine) {
+	dog.HttpServer.DefaultAddHandler("/push", controller.PushControl)
+	dog.HttpServer.DefaultAddHandler("/query", controller.QueryControl)
+	dog.HttpServer.DefaultAddHandler("/route", controller.RouteControl)
+
+	dog.HttpServer.SetInit(func(g *gin.Engine) error {
+		r := g.Group("")
+		r.Use(
+			httplib.GroupFilter(),
+			httplib.Logger(),
+		)
+
+		for k, v := range dog.HttpServer.DefaultHandlerMap {
+			f, err := httplib.Wrap(v)
+			if err != nil {
+				return err
+			}
+			r.GET(k, f)
+			r.POST(k, f)
+		}
+
+		r.GET("/hydra", controller.WsControl)
+
+		return nil
+	})
 }
 
 func main() {
-	url, _ := godog.AppConfig.String("redis")
-	cache.Init(url)
+	dog := godog.Default()
 
-	register()
+	url, _ := dog.Config.String("redis")
+	cfg, err := redisdb.RedisConfigFromURLString(url)
+	if err != nil{
+		doglog.Error("redisdb.RedisConfigFromURLString occur error:%s", err)
+		return
+	}
+
+	cache.RedisHandle, err = redisdb.NewRedisPools(cfg)
+	if err != nil{
+		doglog.Error("redisdb.NewRedisPools occur error:%s", err)
+		return
+	}
+
+	register(dog)
 
 	go service.Start()
 
-	if err := godog.Run(); err != nil {
-		godog.Error("Error occurs, error = %s", err.Error())
+	if err := dog.Run(); err != nil {
+		doglog.Error("Error occurs, error = %s", err.Error())
 		return
 	}
 }

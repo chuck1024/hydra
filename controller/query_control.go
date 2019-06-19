@@ -6,57 +6,27 @@
 package controller
 
 import (
-	"github.com/chuck1024/godog"
+	"github.com/chuck1024/doglog"
 	de "github.com/chuck1024/godog/error"
-	"github.com/chuck1024/godog/net/httplib"
 	"github.com/chuck1024/hydra/dao/cache"
 	"github.com/chuck1024/hydra/model"
-	"net/http"
+	"github.com/gin-gonic/gin"
 )
 
-func QueryControl(rsp http.ResponseWriter, req *http.Request) {
-	rsp.Header().Add("Access-Control-Allow-Origin", httplib.CONTENT_ALL)
-	rsp.Header().Add("Content-Type", httplib.CONTENT_JSON)
+func QueryControl(c *gin.Context, req *model.QueryReq) (code int, message string, err error, ret *model.QueryRsp) {
+	ret = &model.QueryRsp{}
 
-	if req.Method == http.MethodOptions {
-		rsp.WriteHeader(http.StatusOK)
-		return
-	} else if req.Method != http.MethodPost {
-		rsp.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-
-	var dErr *de.CodeError
-	request := &model.QueryReq{}
-	response := &model.QueryRsp{}
-
-	defer func() {
-		if dErr != nil {
-			godog.Error("[QueryControl], errorCode: %d, errMsg: %s", dErr.Code(), dErr.Detail())
-		}
-		rsp.Write(httplib.LogGetResponseInfo(req, dErr, response))
-	}()
-
-	err := httplib.GetRequestBody(req, request)
-	if err != nil {
-		dErr = de.MakeCodeError(de.ParameterError, err)
-		return
-	}
-
-	godog.Info("[QueryControl] received request: %v", *request)
-
-	_, err = cache.GetUuid(request.Uuid)
+	_, err = cache.GetUuid(req.Uuid)
 	if err != nil {
 		if err == cache.KeyNotExist {
-			response.IsOnline = false
-			godog.Debug("[QueryControl] uuid[%d] is offline.", request.Uuid)
-			return
+			ret.IsOnline = false
+			doglog.Debug("[QueryControl] uuid[%d] is offline.", req.Uuid)
+			return de.Success, "", nil, ret
 		}
-		godog.Error("[QueryControl] cache get uuid occur error:%s", err)
-		dErr = de.MakeCodeError(de.SystemError, err)
-		return
+		doglog.Error("[QueryControl] cache get uuid occur error:%s", err)
+		return de.SystemError, err.Error(), err, ret
 	}
 
-	response.IsOnline = true
-	return
+	ret.IsOnline = true
+	return de.Success, "", nil, ret
 }

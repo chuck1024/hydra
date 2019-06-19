@@ -8,9 +8,9 @@ package cache
 import (
 	"errors"
 	"fmt"
-	"github.com/chuck1024/godog"
-	"github.com/chuck1024/godog/dao/cache"
+	"github.com/chuck1024/doglog"
 	"github.com/chuck1024/godog/utils"
+	"github.com/chuck1024/redisdb"
 )
 
 const (
@@ -21,6 +21,7 @@ const (
 )
 
 var (
+	RedisHandle *redisdb.RedisPool
 	KeyNotExist = errors.New("KeyNotExist")
 )
 
@@ -35,33 +36,33 @@ func getPushKey(seq string) string {
 func SetUuid(uuid uint64) error {
 	key := getUuidKey(uuid)
 	value := utils.GetLocalIP()
-	//value := utils.GetLocalIP() + ":" + strconv.Itoa(godog.AppConfig.BaseConfig.Server.HttpPort)
-	godog.Debug("[SetUuid] key: %s value:%s", key, value)
+	//value := utils.GetLocalIP() + ":" + strconv.Itoa(doglog.AppConfig.BaseConfig.Server.HttpPort)
+	doglog.Debug("[SetUuid] key: %s value:%s", key, value)
 
-	err := cache.SetEx(key, expireTime, value)
+	err := RedisHandle.SetEx(key, expireTime, value)
 	if err != nil {
-		godog.Error("[SetUuid] redis SetEx occur error: %s, key:%s", err, key)
+		doglog.Error("[SetUuid] redis SetEx occur error: %s, key:%s", err, key)
 		return err
 	}
 
-	godog.Debug("[SetUuid] set key success. key:%s ", key)
+	doglog.Debug("[SetUuid] set key success. key:%s ", key)
 
 	return nil
 }
 
 func GetUuid(uuid uint64) (value string, err error) {
 	key := getUuidKey(uuid)
-	godog.Debug("[GetUuid] key:%s ", key)
+	doglog.Debug("[GetUuid] key:%s ", key)
 
-	value, err = cache.Get(key)
+	value, err = RedisHandle.Get(key)
 	if err != nil {
 		newErr := fmt.Sprintf("%s", err)
 		if newErr == "nil reply" {
-			godog.Debug("[GetUuid] get value keyNotExist. key: %s", key)
+			doglog.Debug("[GetUuid] get value keyNotExist. key: %s", key)
 			return "", KeyNotExist
 		}
 
-		godog.Error("[GetUuid] redis Get occur error: %s, key:%s", err, key)
+		doglog.Error("[GetUuid] redis Get occur error: %s, key:%s", err, key)
 		return
 	}
 
@@ -69,54 +70,54 @@ func GetUuid(uuid uint64) (value string, err error) {
 		return "", KeyNotExist
 	}
 
-	godog.Debug("[GetUuid] localAddr: %s", value)
+	doglog.Debug("[GetUuid] localAddr: %s", value)
 
 	return
 }
 
 func DelUuid(uuid uint64) error {
 	key := getUuidKey(uuid)
-	godog.Debug("[DelUuid] key: %s", key)
+	doglog.Debug("[DelUuid] key: %s", key)
 
-	_, err := cache.Del(key)
+	err := RedisHandle.Del(key)
 	if err != nil {
-		godog.Error("[DelUuid] redis Del occur error: %s, key:%s", err, key)
+		doglog.Error("[DelUuid] redis Del occur error: %s, key:%s", err, key)
 		return err
 	}
 
-	godog.Debug("[DelUuid] Del key success. key:%s ", key)
+	doglog.Debug("[DelUuid] Del key success. key:%s ", key)
 
 	return nil
 }
 
 func SetPush(id string) error {
 	key := getPushKey(id)
-	godog.Debug("[SetPush] key: %s", key)
+	doglog.Debug("[SetPush] key: %s", key)
 
-	err := cache.SetEx(key, pushExpireTime, "check")
+	err := RedisHandle.SetEx(key, pushExpireTime, "check")
 	if err != nil {
-		godog.Error("[SetPush] redis setEx occur error: %s, key:%s", err, key)
+		doglog.Error("[SetPush] redis setEx occur error: %s, key:%s", err, key)
 		return err
 	}
 
-	godog.Debug("[SetPush] set key success. key: %s", key)
+	doglog.Debug("[SetPush] set key success. key: %s", key)
 
 	return nil
 }
 
 func GetPush(id string) bool {
 	key := getPushKey(id)
-	godog.Debug("[GetPush] key:%s ", key)
+	doglog.Debug("[GetPush] key:%s ", key)
 
-	value, err := cache.Get(key)
+	value, err := RedisHandle.Get(key)
 	if err != nil {
 		newErr := fmt.Sprintf("%s", err)
 		if newErr == "nil reply" {
-			godog.Debug("[GetPush] redis check no repeat key: %s ", key)
+			doglog.Debug("[GetPush] redis check no repeat key: %s ", key)
 			return false
 		}
 
-		godog.Error("[GetPush] redis Get occur error : %s, key:%s", err, key)
+		doglog.Error("[GetPush] redis Get occur error : %s, key:%s", err, key)
 		return false
 	}
 

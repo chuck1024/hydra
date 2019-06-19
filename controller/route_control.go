@@ -6,50 +6,20 @@
 package controller
 
 import (
-	"github.com/chuck1024/godog"
 	de "github.com/chuck1024/godog/error"
-	"github.com/chuck1024/godog/net/httplib"
 	"github.com/chuck1024/hydra/model"
 	"github.com/chuck1024/hydra/service"
-	"net/http"
+	"github.com/gin-gonic/gin"
 )
 
-func RouteControl(rsp http.ResponseWriter, req *http.Request) {
-	rsp.Header().Add("Access-Control-Allow-Origin", httplib.CONTENT_ALL)
-	rsp.Header().Add("Content-Type", httplib.CONTENT_JSON)
+func RouteControl(c *gin.Context, req *model.RouteReq) (code int, message string, err error, ret *model.RouteRsp) {
+	ret = &model.RouteRsp{}
 
-	if req.Method == http.MethodOptions {
-		rsp.WriteHeader(http.StatusOK)
-		return
-	} else if req.Method != http.MethodPost {
-		rsp.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-
-	var dErr *de.CodeError
-	request := &model.RouteReq{}
-	response := &model.RouteRsp{}
-
-	defer func() {
-		if dErr != nil {
-			godog.Error("[RouteControl], errorCode: %d, errMsg: %s", dErr.Code(), dErr.Detail())
-		}
-		rsp.Write(httplib.LogGetResponseInfo(req, dErr, response))
-	}()
-
-	err := httplib.GetRequestBody(req, &request)
+	seq, err := service.Push(req.Id, req.Uuid, req.Msg)
 	if err != nil {
-		dErr = de.MakeCodeError(de.ParameterError, err)
-		return
+		return de.SystemError, err.Error(), err, ret
 	}
 
-	godog.Info("[RouteControl] received request: %v", *request)
-
-	seq, err := service.Push(request.Id, request.Uuid, request.Msg)
-	if err != nil {
-		dErr = de.MakeCodeError(de.SystemError, err)
-		return
-	}
-
-	response.Seq = seq
+	ret.Seq = seq
+	return de.Success, "", nil, ret
 }
