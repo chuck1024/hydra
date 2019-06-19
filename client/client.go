@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/chuck1024/hydra/common"
 	"github.com/chuck1024/hydra/model"
 	"github.com/gorilla/websocket"
 	"net/url"
@@ -44,14 +45,14 @@ func main() {
 		rsp := &model.Response{}
 
 		json.Unmarshal(message, rsp)
-		if rsp.Cmd == "push" {
+		if rsp.Cmd == common.PushCmd {
 			resp := &model.PushClientReq{}
 			json.Unmarshal(message, resp)
 			fmt.Println("received: ", *resp)
 
 			pr := &model.Response{
 				Id:  resp.Id,
-				Cmd: "push",
+				Cmd: common.PushCmd,
 			}
 			pr.Data.Code = 200
 			pr.Data.Result = "ok"
@@ -77,7 +78,7 @@ func heartbeat(conn *websocket.Conn) {
 		case <-t.C:
 			h := &model.HeartBeatReq{
 				Id:  nextSeq(),
-				Cmd: "heartbeat",
+				Cmd: common.HeartbeatCmd,
 			}
 
 			hh, _ := json.Marshal(h)
@@ -92,19 +93,19 @@ func handle(conn *websocket.Conn) {
 		fmt.Scan(&input)
 		if len(input) > 0 {
 			switch input {
-			case "login":
+			case common.LoginCmd:
 				l := &model.LoginReq{
 					Id:   nextSeq(),
-					Cmd:  "login",
+					Cmd:  common.LoginCmd,
 					Uuid: *uuid,
 				}
 				ll, _ := json.Marshal(l)
 				conn.WriteMessage(websocket.BinaryMessage, ll)
 
-			case "heartbeat":
+			case common.HeartbeatCmd:
 				h := &model.HeartBeatReq{
 					Id:  nextSeq(),
-					Cmd: "heartbeat",
+					Cmd: common.HeartbeatCmd,
 				}
 
 				hh, _ := json.Marshal(h)

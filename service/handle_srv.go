@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"github.com/chuck1024/doglog"
 	de "github.com/chuck1024/godog/error"
+	"github.com/chuck1024/hydra/common"
 	"github.com/chuck1024/hydra/dao/cache"
 	"github.com/chuck1024/hydra/model"
 	"github.com/gorilla/websocket"
@@ -48,7 +49,7 @@ func HandleData(message []byte, client *model.Client) {
 	doglog.Debug("[HandleData] handle data. id: %s, cmd:%s", data.Id, data.Cmd)
 
 	switch data.Cmd {
-	case "login":
+	case common.LoginCmd:
 		loginData := &model.LoginReq{}
 		if err := json.Unmarshal(message, loginData); err != nil {
 			response.Data.Code = uint32(de.SystemError)
@@ -67,7 +68,7 @@ func HandleData(message []byte, client *model.Client) {
 			break
 		}
 
-	case "heartbeat":
+	case common.HeartbeatCmd:
 		doglog.Debug("[HandleData] heartbeat uuid: %d", client.Uuid)
 
 		if client.Uuid > 0 {
@@ -94,7 +95,7 @@ func HandleData(message []byte, client *model.Client) {
 			doglog.Debug("[HandleData] heartbeat user not login")
 		}
 
-	case "push":
+	case common.PushCmd:
 		rsp := &model.Response{}
 		if err := json.Unmarshal(message, rsp); err != nil {
 			response.Data.Code = uint32(de.SystemError)
