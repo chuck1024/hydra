@@ -45,18 +45,18 @@ func register(dog *godog.Engine) {
 }
 
 func main() {
-	gin.SetMode(gin.ReleaseMode)
 	dog := godog.Default()
+	dog.InitLog()
 
 	url, _ := dog.Config.String("redis")
 	cfg, err := redisdb.RedisConfigFromURLString(url)
-	if err != nil{
+	if err != nil {
 		doglog.Error("redisdb.RedisConfigFromURLString occur error:%s", err)
 		return
 	}
 
 	cache.RedisHandle, err = redisdb.NewRedisPools(cfg)
-	if err != nil{
+	if err != nil {
 		doglog.Error("redisdb.NewRedisPools occur error:%s", err)
 		return
 	}
