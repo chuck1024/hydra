@@ -8,7 +8,7 @@
   "Server": {
     "AppName": "hydra",
     "HttpPort":10240,
-    "TcpPort": 0
+    "RpcPort": 0
   },
 
   "redis" : "tcp://127.0.0.1:6379?idleTimeout=1s&maxIdle=10&madActive=200"
