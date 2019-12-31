@@ -6,7 +6,7 @@
 package common
 
 const (
-	LoginCmd = "login"
-	PushCmd = "push"
+	LoginCmd     = "login"
+	PushCmd      = "push"
 	HeartbeatCmd = "heartbeat"
 )

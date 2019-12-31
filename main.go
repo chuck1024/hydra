@@ -9,11 +9,11 @@ import (
 	"github.com/chuck1024/doglog"
 	"github.com/chuck1024/godog"
 	"github.com/chuck1024/godog/net/httplib"
-	"github.com/chuck1024/hydra/controller"
-	"github.com/chuck1024/hydra/dao/cache"
-	"github.com/chuck1024/hydra/service"
 	"github.com/chuck1024/redisdb"
 	"github.com/gin-gonic/gin"
+	"hydra/controller"
+	"hydra/dao/cache"
+	"hydra/service"
 )
 
 func register(dog *godog.Engine) {

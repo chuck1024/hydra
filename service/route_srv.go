@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"github.com/chuck1024/doglog"
 	"github.com/chuck1024/godog"
-	"github.com/chuck1024/hydra/model"
+	"hydra/model"
 	"strconv"
 	"time"
 )

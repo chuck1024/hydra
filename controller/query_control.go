@@ -8,9 +8,9 @@ package controller
 import (
 	"github.com/chuck1024/doglog"
 	de "github.com/chuck1024/godog/error"
-	"github.com/chuck1024/hydra/dao/cache"
-	"github.com/chuck1024/hydra/model"
 	"github.com/gin-gonic/gin"
+	"hydra/dao/cache"
+	"hydra/model"
 )
 
 func QueryControl(c *gin.Context, req *model.QueryReq) (code int, message string, err error, ret *model.QueryRsp) {

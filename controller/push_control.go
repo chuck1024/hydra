@@ -9,11 +9,11 @@ import (
 	"errors"
 	"github.com/chuck1024/doglog"
 	de "github.com/chuck1024/godog/error"
-	"github.com/chuck1024/hydra/common"
-	"github.com/chuck1024/hydra/dao/cache"
-	"github.com/chuck1024/hydra/model"
-	"github.com/chuck1024/hydra/service"
 	"github.com/gin-gonic/gin"
+	"hydra/common"
+	"hydra/dao/cache"
+	"hydra/model"
+	"hydra/service"
 )
 
 func PushControl(c *gin.Context, req *model.PushReq) (code int, message string, err error, ret *model.PushRsp) {

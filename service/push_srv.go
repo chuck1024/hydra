@@ -9,9 +9,9 @@ import (
 	"encoding/json"
 	"github.com/chuck1024/doglog"
 	"github.com/chuck1024/godog/utils"
-	"github.com/chuck1024/hydra/common"
-	"github.com/chuck1024/hydra/dao/cache"
-	"github.com/chuck1024/hydra/model"
+	"hydra/common"
+	"hydra/dao/cache"
+	"hydra/model"
 )
 
 func Push(id string, uuid uint64, msg string) (string, error) {

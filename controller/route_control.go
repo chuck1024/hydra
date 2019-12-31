@@ -7,9 +7,9 @@ package controller
 
 import (
 	de "github.com/chuck1024/godog/error"
-	"github.com/chuck1024/hydra/model"
-	"github.com/chuck1024/hydra/service"
 	"github.com/gin-gonic/gin"
+	"hydra/model"
+	"hydra/service"
 )
 
 func RouteControl(c *gin.Context, req *model.RouteReq) (code int, message string, err error, ret *model.RouteRsp) {
