@@ -1,9 +1,4 @@
-/**
- * Copyright 2018 hydra Author. All rights reserved.
- * Author: Chuck1024
- */
-
-package model
+package common
 
 ////////// to client /////////////
 // login
@@ -33,4 +28,43 @@ type Response struct {
 		Code   uint32 `json:"code"`
 		Result string `json:"result"`
 	}
+}
+
+// -------- route -------
+type RouteReq struct {
+	Id   string
+	Uuid uint64
+	Msg  string
+}
+
+type RouteRsp struct {
+	Seq string
+}
+
+// - - - - server - - - -
+// push msg
+type PushReq struct {
+	Id   string
+	Uuid uint64
+	Msg  string
+}
+
+type PushRsp struct {
+	Seq string
+}
+
+// query isOnline
+type QueryReq struct {
+	Uuid uint64
+}
+
+type QueryRsp struct {
+	IsOnline bool
+}
+
+// push transfer
+type TransferData struct {
+	Seq  string `json:"seq"`
+	Uuid uint64 `json:"uuid"`
+	Msg  string `json:"msg"`
 }

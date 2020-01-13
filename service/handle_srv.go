@@ -12,11 +12,10 @@ import (
 	"github.com/gorilla/websocket"
 	"hydra/common"
 	"hydra/dao/cache"
-	"hydra/model"
 )
 
-func HandleData(message []byte, client *model.Client) {
-	response := &model.Response{}
+func HandleData(message []byte, client *Client) {
+	response := &common.Response{}
 	response.Data.Code = uint32(de.Success)
 	//handle message according to yourself
 	doglog.Debug("[HandleData] receive message:%s", string(message))
@@ -37,7 +36,7 @@ func HandleData(message []byte, client *model.Client) {
 		client.Socket.WriteMessage(websocket.TextMessage, respByte)
 	}()
 
-	data := &model.HeartBeatReq{}
+	data := &common.HeartBeatReq{}
 	if err := json.Unmarshal(message, data); err != nil {
 		response.Data.Code = uint32(de.SystemError)
 		doglog.Error("[HandleData] json unmarshal occur error: %s", err)
@@ -50,7 +49,7 @@ func HandleData(message []byte, client *model.Client) {
 
 	switch data.Cmd {
 	case common.LoginCmd:
-		loginData := &model.LoginReq{}
+		loginData := &common.LoginReq{}
 		if err := json.Unmarshal(message, loginData); err != nil {
 			response.Data.Code = uint32(de.SystemError)
 			doglog.Error("[HandleData] loginData json unmarshal occur error: %s", err)
@@ -96,7 +95,7 @@ func HandleData(message []byte, client *model.Client) {
 		}
 
 	case common.PushCmd:
-		rsp := &model.Response{}
+		rsp := &common.Response{}
 		if err := json.Unmarshal(message, rsp); err != nil {
 			response.Data.Code = uint32(de.SystemError)
 			doglog.Error("[HandleData] push response json unmarshal occur error: %s", err)

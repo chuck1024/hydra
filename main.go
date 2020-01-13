@@ -9,7 +9,6 @@ import (
 	"github.com/chuck1024/doglog"
 	"github.com/chuck1024/godog"
 	"github.com/chuck1024/godog/net/httplib"
-	"github.com/chuck1024/redisdb"
 	"github.com/gin-gonic/gin"
 	"hydra/controller"
 	"hydra/dao/cache"
@@ -47,22 +46,8 @@ func register(dog *godog.Engine) {
 func main() {
 	dog := godog.Default()
 	dog.InitLog()
-
-	url, _ := dog.Config.String("redis")
-	cfg, err := redisdb.RedisConfigFromURLString(url)
-	if err != nil {
-		doglog.Error("redisdb.RedisConfigFromURLString occur error:%s", err)
-		return
-	}
-
-	cache.RedisHandle, err = redisdb.NewRedisPools(cfg)
-	if err != nil {
-		doglog.Error("redisdb.NewRedisPools occur error:%s", err)
-		return
-	}
-
+	cache.Init(dog)
 	register(dog)
-
 	go service.Start()
 
 	if err := dog.Run(); err != nil {

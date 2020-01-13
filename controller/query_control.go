@@ -9,12 +9,12 @@ import (
 	"github.com/chuck1024/doglog"
 	de "github.com/chuck1024/godog/error"
 	"github.com/gin-gonic/gin"
+	"hydra/common"
 	"hydra/dao/cache"
-	"hydra/model"
 )
 
-func QueryControl(c *gin.Context, req *model.QueryReq) (code int, message string, err error, ret *model.QueryRsp) {
-	ret = &model.QueryRsp{}
+func QueryControl(c *gin.Context, req *common.QueryReq) (code int, message string, err error, ret *common.QueryRsp) {
+	ret = &common.QueryRsp{}
 
 	_, err = cache.GetUuid(req.Uuid)
 	if err != nil {

@@ -9,9 +9,13 @@ import (
 	"errors"
 	"fmt"
 	"github.com/chuck1024/doglog"
+	"github.com/chuck1024/godog"
 	"github.com/chuck1024/godog/utils"
 	"github.com/chuck1024/redisdb"
 )
+
+// conf.json redis tag : redis
+const redisTag = "redis"
 
 const (
 	uuidPrefix     = "hydra:uuid" // key:uuid value:localAddr
@@ -21,9 +25,24 @@ const (
 )
 
 var (
-	RedisHandle *redisdb.RedisPool
+	redisHandle *redisdb.RedisPool
 	KeyNotExist = errors.New("KeyNotExist")
 )
+
+func Init(dog *godog.Engine) {
+	url, _ := dog.Config.String(redisTag)
+	cfg, err := redisdb.RedisConfigFromURLString(url)
+	if err != nil {
+		doglog.Error("redis Init RedisConfigFromURLString occur error:%s", err)
+		return
+	}
+
+	redisHandle, err = redisdb.NewRedisPools(cfg)
+	if err != nil {
+		doglog.Error("redis Init NewRedisPools occur error:%s", err)
+		return
+	}
+}
 
 func getUuidKey(uuid uint64) string {
 	return fmt.Sprintf("%s:%d", uuidPrefix, uuid)
@@ -39,7 +58,7 @@ func SetUuid(uuid uint64) error {
 	//value := utils.GetLocalIP() + ":" + strconv.Itoa(doglog.AppConfig.BaseConfig.Server.HttpPort)
 	doglog.Debug("[SetUuid] key: %s value:%s", key, value)
 
-	err := RedisHandle.SetEx(key, expireTime, value)
+	err := redisHandle.SetEx(key, expireTime, value)
 	if err != nil {
 		doglog.Error("[SetUuid] redis SetEx occur error: %s, key:%s", err, key)
 		return err
@@ -54,7 +73,7 @@ func GetUuid(uuid uint64) (value string, err error) {
 	key := getUuidKey(uuid)
 	doglog.Debug("[GetUuid] key:%s ", key)
 
-	value, err = RedisHandle.Get(key)
+	value, err = redisHandle.Get(key)
 	if err != nil {
 		newErr := fmt.Sprintf("%s", err)
 		if newErr == "nil reply" {
@@ -79,7 +98,7 @@ func DelUuid(uuid uint64) error {
 	key := getUuidKey(uuid)
 	doglog.Debug("[DelUuid] key: %s", key)
 
-	err := RedisHandle.Del(key)
+	err := redisHandle.Del(key)
 	if err != nil {
 		doglog.Error("[DelUuid] redis Del occur error: %s, key:%s", err, key)
 		return err
@@ -94,7 +113,7 @@ func SetPush(id string) error {
 	key := getPushKey(id)
 	doglog.Debug("[SetPush] key: %s", key)
 
-	err := RedisHandle.SetEx(key, pushExpireTime, "check")
+	err := redisHandle.SetEx(key, pushExpireTime, "check")
 	if err != nil {
 		doglog.Error("[SetPush] redis setEx occur error: %s, key:%s", err, key)
 		return err
@@ -109,7 +128,7 @@ func GetPush(id string) bool {
 	key := getPushKey(id)
 	doglog.Debug("[GetPush] key:%s ", key)
 
-	value, err := RedisHandle.Get(key)
+	value, err := redisHandle.Get(key)
 	if err != nil {
 		newErr := fmt.Sprintf("%s", err)
 		if newErr == "nil reply" {

@@ -12,12 +12,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"hydra/common"
 	"hydra/dao/cache"
-	"hydra/model"
 	"hydra/service"
 )
 
-func PushControl(c *gin.Context, req *model.PushReq) (code int, message string, err error, ret *model.PushRsp) {
-	ret = &model.PushRsp{}
+func PushControl(c *gin.Context, req *common.PushReq) (code int, message string, err error, ret *common.PushRsp) {
+	ret = &common.PushRsp{}
 
 	if cache.GetPush(req.Id) {
 		doglog.Error("[Push] cache get push, id[%s] is exist", req.Id)

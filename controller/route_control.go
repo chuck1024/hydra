@@ -8,12 +8,12 @@ package controller
 import (
 	de "github.com/chuck1024/godog/error"
 	"github.com/gin-gonic/gin"
-	"hydra/model"
+	"hydra/common"
 	"hydra/service"
 )
 
-func RouteControl(c *gin.Context, req *model.RouteReq) (code int, message string, err error, ret *model.RouteRsp) {
-	ret = &model.RouteRsp{}
+func RouteControl(c *gin.Context, req *common.RouteReq) (code int, message string, err error, ret *common.RouteRsp) {
+	ret = &common.RouteRsp{}
 
 	seq, err := service.Push(req.Id, req.Uuid, req.Msg)
 	if err != nil {

@@ -11,14 +11,57 @@ import (
 	"github.com/gorilla/websocket"
 	"hydra/common"
 	"hydra/dao/cache"
-	"hydra/model"
+	"sync"
 )
 
-var Hub = model.ClientHub{
+type Client struct {
+	Id     string
+	Socket *websocket.Conn
+	Uuid   uint64
+}
+
+type ClientHub struct {
+	Clients    map[uint64]*Client
+	hLock      sync.RWMutex
+	SendMsg    chan []byte
+	Register   chan *Client
+	Unregister chan *Client
+}
+
+func (h *ClientHub) SetConnValue(uuid uint64, client *Client) {
+	h.hLock.Lock()
+	defer h.hLock.Unlock()
+
+	h.Clients[uuid] = client
+}
+
+func (h *ClientHub) GetConnValue(uuid uint64) *Client {
+	h.hLock.Lock()
+	defer h.hLock.Unlock()
+
+	if conn, ok := h.Clients[uuid]; ok {
+		return conn
+	}
+
+	return nil
+}
+
+func (h *ClientHub) DelConnValue(uuid uint64) error {
+	h.hLock.Lock()
+	defer h.hLock.Unlock()
+
+	if _, ok := h.Clients[uuid]; ok {
+		delete(h.Clients, uuid)
+	}
+
+	return nil
+}
+
+var Hub = ClientHub{
 	SendMsg:    make(chan []byte, 10000),
-	Register:   make(chan *model.Client, 10000),
-	Unregister: make(chan *model.Client, 10000),
-	Clients:    make(map[uint64]*model.Client),
+	Register:   make(chan *Client, 10000),
+	Unregister: make(chan *Client, 10000),
+	Clients:    make(map[uint64]*Client),
 }
 
 func Start() {
@@ -36,7 +79,7 @@ func Start() {
 			}
 
 		case sendMsg := <-Hub.SendMsg:
-			data := &model.TransferData{}
+			data := &common.TransferData{}
 			err := json.Unmarshal(sendMsg, data)
 			if err != nil {
 				doglog.Error("[Start] json unmarshal occur error:%s", err)
@@ -48,7 +91,7 @@ func Start() {
 				continue
 			}
 
-			pd := &model.PushClientReq{
+			pd := &common.PushClientReq{
 				Id:  data.Seq,
 				Cmd: common.PushCmd,
 				Msg: data.Msg,
