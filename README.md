@@ -30,6 +30,10 @@ hydra是一个基于websocket实现的简单的push服务，实现客户端登�
     4、connect manager：主要用于维持和客户端之间的连接通道，主要负责和客户端交互。
 ```
 
+### 请注意
+
+dao/cache使用的redis client `github.com/chuck1024/redisdb`组件，还是测试中，并没有公开。所以现在要测试的话，需要用户自己替换为其他redis组件。请理解，谢谢！
+
 ### 使用
 ```
 为了方便在同一台机器上能够测试，需要修改redis保存用户连接状态的value，需要修改为ip+port的格式。需要更改common/service/core/push_srv.go

@@ -8,13 +8,23 @@ package service
 import (
 	"encoding/json"
 	"github.com/chuck1024/doglog"
+	"github.com/chuck1024/gl"
 	de "github.com/chuck1024/godog/error"
 	"github.com/gorilla/websocket"
 	"hydra/common"
 	"hydra/dao/cache"
+	"strconv"
+	"time"
 )
 
 func HandleData(message []byte, client *Client) {
+	gl.Init()
+	defer gl.Close()
+	st := time.Now()
+	traceId := strconv.FormatInt(st.UnixNano(), 10)
+	gl.Set(gl.LogId, traceId)
+	gl.Set(gl.ClientIp, client.Socket.RemoteAddr().String())
+
 	response := &common.Response{}
 	response.Data.Code = uint32(de.Success)
 	//handle message according to yourself
