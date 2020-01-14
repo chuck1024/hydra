@@ -15,3 +15,4 @@ log/
 clien/client
 hydra.*
 dumpPanic.-dump-*
+client/client
