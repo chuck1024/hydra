@@ -23,6 +23,7 @@ func register(dog *godog.Engine) {
 	dog.HttpServer.SetInit(func(g *gin.Engine) error {
 		r := g.Group("")
 		r.Use(
+			httplib.GlFilter(),
 			httplib.GroupFilter(),
 			httplib.Logger(),
 		)

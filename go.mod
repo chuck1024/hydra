@@ -3,8 +3,8 @@ module hydra
 go 1.13
 
 require (
-	github.com/chuck1024/doglog v0.0.0-20200102090811-048350f97093
-	github.com/chuck1024/godog v0.0.0-20200109022227-3090c02a8c7c
+	github.com/chuck1024/doglog v0.0.0-20200114052321-1297eb7c152e
+	github.com/chuck1024/godog v0.0.0-20200114053715-b4dab07db07d
 	github.com/chuck1024/hydra v0.0.0-20190623085650-e100634444e2
 	github.com/chuck1024/redisdb v0.0.0-20190617091652-c849607cda9f
 	github.com/garyburd/redigo v1.6.0 // indirect

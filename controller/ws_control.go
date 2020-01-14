@@ -9,7 +9,6 @@ import (
 	"github.com/chuck1024/doglog"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"hydra/common"
 	"hydra/service"
 	"net/http"
 )
@@ -23,7 +22,7 @@ func WsControl(c *gin.Context) {
 
 	doglog.Debug("[WsControl] %s connected.", conn.RemoteAddr().String())
 
-	client := &common.Client{Id: conn.RemoteAddr().String(), Socket: conn}
+	client := &service.Client{Id: conn.RemoteAddr().String(), Socket: conn}
 
 	for {
 		_, message, err := client.Socket.ReadMessage()
