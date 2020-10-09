@@ -27,7 +27,7 @@ func Run() {
 
 	// gd run
 	if err := d.Run(); err != nil {
-		dlog.Crashf("gd-demo run occur err:%v", err)
+		dlog.Crashf("hydra run occur err:%v", err)
 		return
 	}
 }
