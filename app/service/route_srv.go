@@ -7,35 +7,34 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/chuck1024/doglog"
-	"github.com/chuck1024/godog"
-	"hydra/common"
-	"strconv"
+	"github.com/chuck1024/gd"
+	"github.com/chuck1024/gd/config"
+	"github.com/chuck1024/gd/dlog"
+	"hydra/libray"
 	"time"
 )
 
 func Route(local string, id string, uuid uint64, msg string) (string, error) {
-	dog := godog.Default()
-	url := "http://" + local + ":" + strconv.Itoa(dog.Config.BaseConfig.Server.HttpPort)
+	url := "http://" + local + ":" + config.Config().Section("Server").Key("httpPort").MustString("9527")
 	//url := "http://" + local  + "/route"
-	request := &common.RouteReq{
+	request := &libray.RouteReq{
 		Id:   id,
 		Uuid: uuid,
 		Msg:  msg,
 	}
 
-	client := dog.NewHttpClient(time.Duration(0), url)
+	client := gd.NewHttpClient(time.Duration(0), url)
 	resp, _, err := client.Method("POST", "route", nil, request)
 	if err != nil {
-		doglog.Error("[Route] send to server occur error: %s", err)
+		dlog.Error("[Route] send to server occur error: %s", err)
 		return "", err
 	}
 
 	dataByte, _ := json.Marshal(resp.Body)
-	response := &common.RouteRsp{}
+	response := &libray.RouteRsp{}
 	json.Unmarshal(dataByte, response)
 
-	doglog.Debug("[Route] seq:%s", response.Seq)
+	dlog.Debug("[Route] seq:%s", response.Seq)
 	seq := response.Seq
 	return seq, nil
 }

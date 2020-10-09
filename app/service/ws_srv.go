@@ -7,10 +7,10 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/chuck1024/doglog"
+	"github.com/chuck1024/gd/dlog"
 	"github.com/gorilla/websocket"
-	"hydra/common"
-	"hydra/dao/cache"
+	"hydra/app/service/sp"
+	"hydra/libray"
 	"sync"
 )
 
@@ -74,15 +74,15 @@ func Start() {
 			if client.Uuid > 0 {
 				if _, ok := Hub.Clients[client.Uuid]; ok {
 					Hub.DelConnValue(client.Uuid)
-					cache.DelUuid(client.Uuid)
+					sp.Get().UidCache.DelUuid(client.Uuid)
 				}
 			}
 
 		case sendMsg := <-Hub.SendMsg:
-			data := &common.TransferData{}
+			data := &libray.TransferData{}
 			err := json.Unmarshal(sendMsg, data)
 			if err != nil {
-				doglog.Error("[Start] json unmarshal occur error:%s", err)
+				dlog.Error("[Start] json unmarshal occur error:%s", err)
 				continue
 			}
 
@@ -91,9 +91,9 @@ func Start() {
 				continue
 			}
 
-			pd := &common.PushClientReq{
+			pd := &libray.PushClientReq{
 				Id:  data.Seq,
-				Cmd: common.PushCmd,
+				Cmd: libray.PushCmd,
 				Msg: data.Msg,
 			}
 

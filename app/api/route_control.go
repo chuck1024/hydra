@@ -3,17 +3,17 @@
  * Author: Chuck1024
  */
 
-package controller
+package api
 
 import (
-	de "github.com/chuck1024/godog/error"
+	de "github.com/chuck1024/gd/derror"
 	"github.com/gin-gonic/gin"
-	"hydra/common"
-	"hydra/service"
+	"hydra/app/service"
+	"hydra/libray"
 )
 
-func RouteControl(c *gin.Context, req *common.RouteReq) (code int, message string, err error, ret *common.RouteRsp) {
-	ret = &common.RouteRsp{}
+func RouteControl(c *gin.Context, req *libray.RouteReq) (code int, message string, err error, ret *libray.RouteRsp) {
+	ret = &libray.RouteRsp{}
 
 	seq, err := service.Push(req.Id, req.Uuid, req.Msg)
 	if err != nil {

@@ -3,10 +3,10 @@
  * Author: Chuck1024
  */
 
-package common
+package libray
 
 import (
-	"github.com/chuck1024/godog/error"
+	"github.com/chuck1024/gd/derror"
 )
 
 var (
@@ -15,5 +15,5 @@ var (
 )
 
 func init() {
-	error.ErrMap[Offline] = OfflineStr
+	derror.ErrMap[Offline] = OfflineStr
 }

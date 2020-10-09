@@ -7,38 +7,39 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/chuck1024/doglog"
-	"github.com/chuck1024/godog/utils"
-	"hydra/common"
-	"hydra/dao/cache"
+	"github.com/chuck1024/gd/dlog"
+	"github.com/chuck1024/gd/utls/network"
+	"hydra/app/model"
+	"hydra/app/service/sp"
+	"hydra/libray"
 )
 
 func Push(id string, uuid uint64, msg string) (string, error) {
-	localAddr, err := cache.GetUuid(uuid)
+	localAddr, err := sp.Get().UidCache.GetUuid(uuid)
 	if err != nil {
-		if err == cache.KeyNotExist {
-			doglog.Debug("[Push] uuid is offline.")
+		if err == model.KeyNotExist {
+			dlog.Debug("[Push] uuid is offline.")
 			return "", err
 		}
 
-		doglog.Error("[Push] GetUuid occur error. err:%s", err)
+		dlog.Error("[Push] GetUuid occur error. err:%s", err)
 		return "", err
 	}
 
-	ip := utils.GetLocalIP()
+	ip := network.GetLocalIP()
 	//ip := utils.GetLocalIP() +":" + strconv.Itoa(dog.Config.BaseConfig.Server.HttpPort)
 	if localAddr != ip {
 		seq, err := Route(localAddr, id, uuid, msg)
 		if err != nil {
-			doglog.Error("[Push] route occur error: %s", err)
+			dlog.Error("[Push] route occur error: %s", err)
 			return "", err
 		}
 		return seq, nil
 	}
 
-	seq := common.BuildSeq(uuid)
+	seq := libray.BuildSeq(uuid)
 
-	data := &common.TransferData{
+	data := &libray.TransferData{
 		Seq:  seq,
 		Uuid: uuid,
 		Msg:  msg,
@@ -46,14 +47,14 @@ func Push(id string, uuid uint64, msg string) (string, error) {
 
 	dataByte, err := json.Marshal(data)
 	if err != nil {
-		doglog.Error("[Push] json marshal occur error:%s", err)
+		dlog.Error("[Push] json marshal occur error:%s", err)
 		return "", err
 	}
 
 	Hub.SendMsg <- dataByte
 
-	if err := cache.SetPush(id); err != nil {
-		doglog.Error("[Push] cache ser push occur error: %s", err)
+	if err := sp.Get().UidCache.SetPush(id); err != nil {
+		dlog.Error("[Push] model ser push occur error: %s", err)
 		return "", err
 	}
 

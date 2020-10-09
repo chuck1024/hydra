@@ -3,7 +3,7 @@
  * Author: Chuck1024
  */
 
-package common
+package libray
 
 const (
 	LoginCmd     = "login"
