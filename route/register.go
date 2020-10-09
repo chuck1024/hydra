@@ -37,14 +37,14 @@ func route(e *gd.Engine, r *gin.RouterGroup) error {
 		g := r.Group("v1")
 
 		e.HttpServer.POST(g, "push", api.PushControl)
-		e.HttpServer.POST(g, "/query", api.QueryControl)
-		e.HttpServer.POST(g, "/route", api.RouteControl)
+		e.HttpServer.POST(g, "query", api.QueryControl)
+		e.HttpServer.POST(g, "route", api.RouteControl)
 
 		if ret = e.HttpServer.CheckHandle(); ret != nil {
 			return
 		}
 
-		g.GET("/hydra", api.WsControl)
+		g.GET("hydra", api.WsControl)
 	})
 	return ret
 }
