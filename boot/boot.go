@@ -9,6 +9,7 @@ import (
 	"github.com/chuck1024/gd"
 	"github.com/chuck1024/gd/dlog"
 	"github.com/chuck1024/gd/runtime/inject"
+	"hydra/app/service"
 	"hydra/route"
 )
 
@@ -24,6 +25,9 @@ func Run() {
 
 	// route register
 	route.Register(d)
+
+	// start ws
+	go service.Start()
 
 	// gd run
 	if err := d.Run(); err != nil {
