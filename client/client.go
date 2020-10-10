@@ -17,8 +17,8 @@ import (
 	"time"
 )
 
-var addr = flag.String("addr", "127.0.0.1:10240", "http service address")
-var uuid = flag.Uint64("uuid", 10240, "uuid")
+var addr = flag.String("addr", "127.0.0.1:9527", "http service address")
+var uuid = flag.Uint64("uuid", 9527, "uuid")
 
 func main() {
 	flag.Parse()
