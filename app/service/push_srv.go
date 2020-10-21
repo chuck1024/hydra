@@ -7,7 +7,7 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/chuck1024/gd/dlog"
+	"github.com/chuck1024/gd"
 	"github.com/chuck1024/gd/utls/network"
 	"hydra/app/model"
 	"hydra/app/service/sp"
@@ -18,11 +18,11 @@ func Push(id string, uuid uint64, msg string) (string, error) {
 	localAddr, err := sp.Get().UidCache.GetUuid(uuid)
 	if err != nil {
 		if err == model.KeyNotExist {
-			dlog.Debug("[Push] uuid is offline.")
+			gd.Debug("[Push] uuid is offline.")
 			return "", err
 		}
 
-		dlog.Error("[Push] GetUuid occur error. err:%s", err)
+		gd.Error("[Push] GetUuid occur error. err:%s", err)
 		return "", err
 	}
 
@@ -31,7 +31,7 @@ func Push(id string, uuid uint64, msg string) (string, error) {
 	if localAddr != ip {
 		seq, err := Route(localAddr, id, uuid, msg)
 		if err != nil {
-			dlog.Error("[Push] route occur error: %s", err)
+			gd.Error("[Push] route occur error: %s", err)
 			return "", err
 		}
 		return seq, nil
@@ -47,14 +47,14 @@ func Push(id string, uuid uint64, msg string) (string, error) {
 
 	dataByte, err := json.Marshal(data)
 	if err != nil {
-		dlog.Error("[Push] json marshal occur error:%s", err)
+		gd.Error("[Push] json marshal occur error:%s", err)
 		return "", err
 	}
 
 	Hub.SendMsg <- dataByte
 
 	if err := sp.Get().UidCache.SetPush(id); err != nil {
-		dlog.Error("[Push] model ser push occur error: %s", err)
+		gd.Error("[Push] model ser push occur error: %s", err)
 		return "", err
 	}
 

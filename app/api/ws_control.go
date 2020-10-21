@@ -6,7 +6,7 @@
 package api
 
 import (
-	"github.com/chuck1024/gd/dlog"
+	"github.com/chuck1024/gd"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"hydra/app/service"
@@ -20,7 +20,7 @@ func WsControl(c *gin.Context) {
 		return
 	}
 
-	dlog.Debug("[WsControl] %s connected.", conn.RemoteAddr().String())
+	gd.Debug("[WsControl] %s connected.", conn.RemoteAddr().String())
 
 	client := &service.Client{Id: conn.RemoteAddr().String(), Socket: conn}
 
@@ -29,7 +29,7 @@ func WsControl(c *gin.Context) {
 		if err != nil {
 			service.Hub.Unregister <- client
 			client.Socket.Close()
-			dlog.Debug("[WsControl] %s disconnected.", client.Socket.RemoteAddr().String())
+			gd.Debug("[WsControl] %s disconnected.", client.Socket.RemoteAddr().String())
 			break
 		}
 

@@ -7,7 +7,7 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/chuck1024/gd/dlog"
+	"github.com/chuck1024/gd"
 	"github.com/gorilla/websocket"
 	"hydra/app/service/sp"
 	"hydra/libray"
@@ -46,7 +46,7 @@ func (h *ClientHub) GetConnValue(uuid uint64) *Client {
 	return nil
 }
 
-func (h *ClientHub) DelConnValue(uuid uint64) error {
+func (h *ClientHub) DelConnValue(uuid uint64) {
 	h.hLock.Lock()
 	defer h.hLock.Unlock()
 
@@ -54,7 +54,7 @@ func (h *ClientHub) DelConnValue(uuid uint64) error {
 		delete(h.Clients, uuid)
 	}
 
-	return nil
+	return
 }
 
 var Hub = ClientHub{
@@ -82,7 +82,7 @@ func Start() {
 			data := &libray.TransferData{}
 			err := json.Unmarshal(sendMsg, data)
 			if err != nil {
-				dlog.Error("[Start] json unmarshal occur error:%s", err)
+				gd.Error("[Start] json unmarshal occur error:%s", err)
 				continue
 			}
 

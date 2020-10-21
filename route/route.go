@@ -25,7 +25,7 @@ func Register(e *gd.Engine) {
 			dhttp.GlFilter(),
 			dhttp.StatFilter(),
 			dhttp.GroupFilter(),
-			dhttp.Logger(e.Config("Server", "serverName").String()),
+			dhttp.Logger(gd.Config("Server", "serverName").String()),
 		)
 		return route(e, r)
 	})

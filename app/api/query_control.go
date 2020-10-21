@@ -6,8 +6,8 @@
 package api
 
 import (
+	"github.com/chuck1024/gd"
 	de "github.com/chuck1024/gd/derror"
-	"github.com/chuck1024/gd/dlog"
 	"github.com/gin-gonic/gin"
 	"hydra/app/model"
 	"hydra/app/service/sp"
@@ -21,10 +21,10 @@ func QueryControl(c *gin.Context, req *libray.QueryReq) (code int, message strin
 	if err != nil {
 		if err == model.KeyNotExist {
 			ret.IsOnline = false
-			dlog.Debug("[QueryControl] uuid[%d] is offline.", req.Uuid)
+			gd.Debug("[QueryControl] uuid[%d] is offline.", req.Uuid)
 			return de.Success, "", nil, ret
 		}
-		dlog.Error("[QueryControl] model get uuid occur error:%s", err)
+		gd.Error("[QueryControl] model get uuid occur error:%s", err)
 		return de.SystemError, err.Error(), err, ret
 	}
 

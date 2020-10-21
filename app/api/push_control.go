@@ -7,8 +7,8 @@ package api
 
 import (
 	"errors"
+	"github.com/chuck1024/gd"
 	de "github.com/chuck1024/gd/derror"
-	"github.com/chuck1024/gd/dlog"
 	"github.com/gin-gonic/gin"
 	"hydra/app/model"
 	"hydra/app/service"
@@ -20,17 +20,17 @@ func PushControl(c *gin.Context, req *libray.PushReq) (code int, message string,
 	ret = &libray.PushRsp{}
 
 	if sp.Get().UidCache.GetPush(req.Id) {
-		dlog.Error("[Push] model get push, id[%s] is exist", req.Id)
+		gd.Error("[Push] model get push, id[%s] is exist", req.Id)
 		return de.ParameterError, "already sent id", errors.New("already sent id"), ret
 	}
 
 	seq, err := service.Push(req.Id, req.Uuid, req.Msg)
 	if err != nil {
 		if err == model.KeyNotExist {
-			dlog.Debug("[PushControl] uuid[%d] is offline.", req.Uuid)
+			gd.Debug("[PushControl] uuid[%d] is offline.", req.Uuid)
 			return libray.Offline, err.Error(), err, ret
 		}
-		dlog.Error("[PushControl] push occur error:%s", err)
+		gd.Error("[PushControl] push occur error:%s", err)
 		return de.SystemError, err.Error(), err, ret
 	}
 

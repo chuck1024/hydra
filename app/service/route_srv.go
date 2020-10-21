@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"github.com/chuck1024/gd"
 	"github.com/chuck1024/gd/config"
-	"github.com/chuck1024/gd/dlog"
 	"hydra/libray"
 	"time"
 )
@@ -26,7 +25,7 @@ func Route(local string, id string, uuid uint64, msg string) (string, error) {
 	client := gd.NewHttpClient(time.Duration(0), url)
 	resp, _, err := client.Method("POST", "route", nil, request)
 	if err != nil {
-		dlog.Error("[Route] send to server occur error: %s", err)
+		gd.Error("[Route] send to server occur error: %s", err)
 		return "", err
 	}
 
@@ -34,7 +33,7 @@ func Route(local string, id string, uuid uint64, msg string) (string, error) {
 	response := &libray.RouteRsp{}
 	json.Unmarshal(dataByte, response)
 
-	dlog.Debug("[Route] seq:%s", response.Seq)
+	gd.Debug("[Route] seq:%s", response.Seq)
 	seq := response.Seq
 	return seq, nil
 }

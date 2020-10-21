@@ -9,6 +9,8 @@ import (
 	"hydra/boot"
 )
 
+// @title hydra
+// @version 1.0
 func main() {
 	boot.Run()
 }
