@@ -8,12 +8,12 @@ package api
 import (
 	de "github.com/chuck1024/gd/derror"
 	"github.com/gin-gonic/gin"
+	"hydra/app/domain"
 	"hydra/app/service"
-	"hydra/libray"
 )
 
-func RouteControl(c *gin.Context, req *libray.RouteReq) (code int, message string, err error, ret *libray.RouteRsp) {
-	ret = &libray.RouteRsp{}
+func RouteControl(c *gin.Context, req *domain.RouteReq) (code int, message string, err error, ret *domain.RouteRsp) {
+	ret = &domain.RouteRsp{}
 
 	seq, err := service.Push(req.Id, req.Uuid, req.Msg)
 	if err != nil {
@@ -21,5 +21,5 @@ func RouteControl(c *gin.Context, req *libray.RouteReq) (code int, message strin
 	}
 
 	ret.Seq = seq
-	return de.Success, "", nil, ret
+	return de.Success, "ok", nil, ret
 }

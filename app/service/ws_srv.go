@@ -9,8 +9,8 @@ import (
 	"encoding/json"
 	"github.com/chuck1024/gd"
 	"github.com/gorilla/websocket"
+	"hydra/app/domain"
 	"hydra/app/service/sp"
-	"hydra/libray"
 	"sync"
 )
 
@@ -79,7 +79,7 @@ func Start() {
 			}
 
 		case sendMsg := <-Hub.SendMsg:
-			data := &libray.TransferData{}
+			data := &domain.TransferData{}
 			err := json.Unmarshal(sendMsg, data)
 			if err != nil {
 				gd.Error("[Start] json unmarshal occur error:%s", err)
@@ -91,9 +91,9 @@ func Start() {
 				continue
 			}
 
-			pd := &libray.PushClientReq{
+			pd := &domain.PushClientReq{
 				Id:  data.Seq,
-				Cmd: libray.PushCmd,
+				Cmd: domain.PushCmd,
 				Msg: data.Msg,
 			}
 

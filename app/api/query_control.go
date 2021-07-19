@@ -9,13 +9,13 @@ import (
 	"github.com/chuck1024/gd"
 	de "github.com/chuck1024/gd/derror"
 	"github.com/gin-gonic/gin"
+	"hydra/app/domain"
 	"hydra/app/model"
 	"hydra/app/service/sp"
-	"hydra/libray"
 )
 
-func QueryControl(c *gin.Context, req *libray.QueryReq) (code int, message string, err error, ret *libray.QueryRsp) {
-	ret = &libray.QueryRsp{}
+func QueryControl(c *gin.Context, req *domain.QueryReq) (code int, message string, err error, ret *domain.QueryRsp) {
+	ret = &domain.QueryRsp{}
 
 	_, err = sp.Get().UidCache.GetUuid(req.Uuid)
 	if err != nil {

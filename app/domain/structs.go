@@ -1,4 +1,4 @@
-package libray
+package domain
 
 ////////// to client /////////////
 // login
@@ -39,6 +39,12 @@ type RouteReq struct {
 
 type RouteRsp struct {
 	Seq string
+}
+
+type RouteResponse struct {
+	Code   int       `json:"code"`
+	Msg    string    `json:"message"`
+	Result *RouteRsp `json:"result"`
 }
 
 // - - - - server - - - -

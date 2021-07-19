@@ -3,7 +3,7 @@
  * Author: Chuck1024
  */
 
-package libray
+package util
 
 import (
 	"fmt"

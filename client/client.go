@@ -10,7 +10,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gorilla/websocket"
-	"hydra/libray"
+	"hydra/app/domain"
 	"net/url"
 	"strconv"
 	"sync/atomic"
@@ -41,17 +41,17 @@ func main() {
 			return
 		}
 
-		rsp := &libray.Response{}
+		rsp := &domain.Response{}
 
 		json.Unmarshal(message, rsp)
-		if rsp.Cmd == libray.PushCmd {
-			resp := &libray.PushClientReq{}
+		if rsp.Cmd == domain.PushCmd {
+			resp := &domain.PushClientReq{}
 			json.Unmarshal(message, resp)
 			fmt.Println("received: ", *resp)
 
-			pr := &libray.Response{
+			pr := &domain.Response{
 				Id:  resp.Id,
-				Cmd: libray.PushCmd,
+				Cmd: domain.PushCmd,
 			}
 			pr.Data.Code = 200
 			pr.Data.Result = "ok"
@@ -75,9 +75,9 @@ func heartbeat(conn *websocket.Conn) {
 	for {
 		select {
 		case <-t.C:
-			h := &libray.HeartBeatReq{
+			h := &domain.HeartBeatReq{
 				Id:  nextSeq(),
-				Cmd: libray.HeartbeatCmd,
+				Cmd: domain.HeartbeatCmd,
 			}
 
 			hh, _ := json.Marshal(h)
@@ -92,19 +92,19 @@ func handle(conn *websocket.Conn) {
 		fmt.Scan(&input)
 		if len(input) > 0 {
 			switch input {
-			case libray.LoginCmd:
-				l := &libray.LoginReq{
+			case domain.LoginCmd:
+				l := &domain.LoginReq{
 					Id:   nextSeq(),
-					Cmd:  libray.LoginCmd,
+					Cmd:  domain.LoginCmd,
 					Uuid: *uuid,
 				}
 				ll, _ := json.Marshal(l)
 				conn.WriteMessage(websocket.BinaryMessage, ll)
 
-			case libray.HeartbeatCmd:
-				h := &libray.HeartBeatReq{
+			case domain.HeartbeatCmd:
+				h := &domain.HeartBeatReq{
 					Id:  nextSeq(),
-					Cmd: libray.HeartbeatCmd,
+					Cmd: domain.HeartbeatCmd,
 				}
 
 				hh, _ := json.Marshal(h)

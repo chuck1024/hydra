@@ -9,9 +9,10 @@ import (
 	"encoding/json"
 	"github.com/chuck1024/gd"
 	"github.com/chuck1024/gd/utls/network"
+	"hydra/app/domain"
 	"hydra/app/model"
 	"hydra/app/service/sp"
-	"hydra/libray"
+	"hydra/app/util"
 )
 
 func Push(id string, uuid uint64, msg string) (string, error) {
@@ -37,9 +38,9 @@ func Push(id string, uuid uint64, msg string) (string, error) {
 		return seq, nil
 	}
 
-	seq := libray.BuildSeq(uuid)
+	seq := util.BuildSeq(uuid)
 
-	data := &libray.TransferData{
+	data := &domain.TransferData{
 		Seq:  seq,
 		Uuid: uuid,
 		Msg:  msg,

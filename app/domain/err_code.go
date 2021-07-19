@@ -3,7 +3,7 @@
  * Author: Chuck1024
  */
 
-package libray
+package domain
 
 import (
 	"github.com/chuck1024/gd/derror"

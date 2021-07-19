@@ -11,9 +11,9 @@ import (
 	de "github.com/chuck1024/gd/derror"
 	"github.com/chuck1024/gd/runtime/gl"
 	"github.com/gorilla/websocket"
+	"hydra/app/domain"
 	"hydra/app/model"
 	"hydra/app/service/sp"
-	"hydra/libray"
 	"strconv"
 	"time"
 )
@@ -26,13 +26,13 @@ func HandleData(message []byte, client *Client) {
 	gl.Set(gl.LogId, traceId)
 	gl.Set(gl.ClientIp, client.Socket.RemoteAddr().String())
 
-	response := &libray.Response{}
+	response := &domain.Response{}
 	response.Data.Code = uint32(de.Success)
 	//handle message according to yourself
 	gd.Debug("[HandleData] receive message:%s", string(message))
 
 	defer func() {
-		if response.Cmd == libray.PushCmd {
+		if response.Cmd == domain.PushCmd {
 			return
 		}
 
@@ -47,7 +47,7 @@ func HandleData(message []byte, client *Client) {
 		client.Socket.WriteMessage(websocket.TextMessage, respByte)
 	}()
 
-	data := &libray.HeartBeatReq{}
+	data := &domain.HeartBeatReq{}
 	if err := json.Unmarshal(message, data); err != nil {
 		response.Data.Code = uint32(de.SystemError)
 		gd.Error("[HandleData] json unmarshal occur error: %s", err)
@@ -59,8 +59,8 @@ func HandleData(message []byte, client *Client) {
 	gd.Debug("[HandleData] handle data. id: %s, cmd:%s", data.Id, data.Cmd)
 
 	switch data.Cmd {
-	case libray.LoginCmd:
-		loginData := &libray.LoginReq{}
+	case domain.LoginCmd:
+		loginData := &domain.LoginReq{}
 		if err := json.Unmarshal(message, loginData); err != nil {
 			response.Data.Code = uint32(de.SystemError)
 			gd.Error("[HandleData] loginData json unmarshal occur error: %s", err)
@@ -78,7 +78,7 @@ func HandleData(message []byte, client *Client) {
 			break
 		}
 
-	case libray.HeartbeatCmd:
+	case domain.HeartbeatCmd:
 		gd.Debug("[HandleData] heartbeat uuid: %d", client.Uuid)
 
 		if client.Uuid > 0 {
@@ -105,8 +105,8 @@ func HandleData(message []byte, client *Client) {
 			gd.Debug("[HandleData] heartbeat user not login")
 		}
 
-	case libray.PushCmd:
-		rsp := &libray.Response{}
+	case domain.PushCmd:
+		rsp := &domain.Response{}
 		if err := json.Unmarshal(message, rsp); err != nil {
 			response.Data.Code = uint32(de.SystemError)
 			gd.Error("[HandleData] push response json unmarshal occur error: %s", err)

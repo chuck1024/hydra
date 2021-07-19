@@ -10,14 +10,14 @@ import (
 	"github.com/chuck1024/gd"
 	de "github.com/chuck1024/gd/derror"
 	"github.com/gin-gonic/gin"
+	"hydra/app/domain"
 	"hydra/app/model"
 	"hydra/app/service"
 	"hydra/app/service/sp"
-	"hydra/libray"
 )
 
-func PushControl(c *gin.Context, req *libray.PushReq) (code int, message string, err error, ret *libray.PushRsp) {
-	ret = &libray.PushRsp{}
+func PushControl(c *gin.Context, req *domain.PushReq) (code int, message string, err error, ret *domain.PushRsp) {
+	ret = &domain.PushRsp{}
 
 	if sp.Get().UidCache.GetPush(req.Id) {
 		gd.Error("[Push] model get push, id[%s] is exist", req.Id)
@@ -28,7 +28,7 @@ func PushControl(c *gin.Context, req *libray.PushReq) (code int, message string,
 	if err != nil {
 		if err == model.KeyNotExist {
 			gd.Debug("[PushControl] uuid[%d] is offline.", req.Uuid)
-			return libray.Offline, err.Error(), err, ret
+			return domain.Offline, err.Error(), err, ret
 		}
 		gd.Error("[PushControl] push occur error:%s", err)
 		return de.SystemError, err.Error(), err, ret

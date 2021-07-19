@@ -8,6 +8,7 @@ package route
 import (
 	"github.com/chuck1024/gd"
 	"github.com/chuck1024/gd/net/dhttp"
+	"github.com/chuck1024/gd/runtime/inject"
 	"github.com/gin-gonic/gin"
 	"hydra/app/api"
 	"sync"
@@ -18,7 +19,7 @@ var (
 )
 
 func Register(e *gd.Engine) {
-	e.HttpServer.SetInit(func(g *gin.Engine) error {
+	inject.RegisterOrFail("httpServerInit",func(g *gin.Engine) error {
 		r := g.Group("")
 
 		r.Use(
