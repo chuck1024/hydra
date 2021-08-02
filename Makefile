@@ -20,6 +20,5 @@ docker_run:
 docker:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o hydra main.go
 	docker build -t registry.cn-chengdu.aliyuncs.com/godog/hydra .
-	docker tag registry.cn-chengdu.aliyuncs.com/godog/hydra registry.cn-chengdu.aliyuncs.com/godog/hydra
 	docker push registry.cn-chengdu.aliyuncs.com/godog/hydra
 	rm -rf hydra
