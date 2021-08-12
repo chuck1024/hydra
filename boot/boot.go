@@ -6,7 +6,7 @@
 package boot
 
 import (
-	"github.com/chuck1024/gd"
+	"github.com/gdp-org/gd"
 	"hydra/app/route"
 	"hydra/app/service"
 )

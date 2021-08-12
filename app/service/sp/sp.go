@@ -6,7 +6,7 @@
 package sp
 
 import (
-	"github.com/chuck1024/gd/runtime/inject"
+	"github.com/gdp-org/gd/runtime/inject"
 	"github.com/go-errors/errors"
 	"hydra/app/model"
 )

@@ -7,9 +7,9 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/chuck1024/gd"
-	de "github.com/chuck1024/gd/derror"
-	"github.com/chuck1024/gd/runtime/gl"
+	"github.com/gdp-org/gd"
+	de "github.com/gdp-org/gd/derror"
+	"github.com/gdp-org/gd/runtime/gl"
 	"github.com/gorilla/websocket"
 	"hydra/app/domain"
 	"hydra/app/model"

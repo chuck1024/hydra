@@ -8,9 +8,9 @@ package model
 import (
 	"errors"
 	"fmt"
-	"github.com/chuck1024/gd"
-	"github.com/chuck1024/gd/databases/redisdb"
-	"github.com/chuck1024/gd/utls/network"
+	"github.com/gdp-org/gd"
+	"github.com/gdp-org/gd/databases/redisdb"
+	"github.com/gdp-org/gd/utls/network"
 )
 
 const (

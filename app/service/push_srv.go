@@ -7,8 +7,8 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/chuck1024/gd"
-	"github.com/chuck1024/gd/utls/network"
+	"github.com/gdp-org/gd"
+	"github.com/gdp-org/gd/utls/network"
 	"hydra/app/domain"
 	"hydra/app/model"
 	"hydra/app/service/sp"

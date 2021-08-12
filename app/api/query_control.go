@@ -6,8 +6,8 @@
 package api
 
 import (
-	"github.com/chuck1024/gd"
-	de "github.com/chuck1024/gd/derror"
+	"github.com/gdp-org/gd"
+	de "github.com/gdp-org/gd/derror"
 	"github.com/gin-gonic/gin"
 	"hydra/app/domain"
 	"hydra/app/model"

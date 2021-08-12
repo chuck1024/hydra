@@ -12,7 +12,7 @@ email : chuck.ch1024@gmail.com
 ## 介绍
 
 ### 使用的包
->* [godog](https://github.com/chuck1024/gd)
+>* [gd](https://github.com/gdp-org/gd)
 >* [websocket](https://github.com/gorilla/websocket/)
 
 ### 简介

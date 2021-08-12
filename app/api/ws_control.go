@@ -6,7 +6,7 @@
 package api
 
 import (
-	"github.com/chuck1024/gd"
+	"github.com/gdp-org/gd"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"hydra/app/service"
